@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
   MotorControllerGroup left_motors;
   MotorControllerGroup right_motors;
 
-  private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftDrive, m_rightDrive);
+  private final DifferentialDrive m_robotDrive = new DifferentialDrive(fl_drive, fr_drive);
   private final Joystick m_stick = new Joystick(0);
   private final Timer m_timer = new Timer();
 
@@ -119,10 +119,11 @@ public class Robot extends TimedRobot {
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     left_motors = new MotorControllerGroup(fl_drive, bl_drive);
+    right_motors = new MotorControllerGroup(fr_drive, br_drive);
    
    
    
-    m_rightDrive.setInverted(true);
+    right_motors.setInverted(true);
     initializeGamePad();
     shuffleboardStartup();
 
@@ -131,7 +132,7 @@ public class Robot extends TimedRobot {
     
     autonSetDrive(0,0);
         
-    left_motors = new MotorControllerGroup(fl_drive, bl_drive)
+    left_motors = new MotorControllerGroup(fl_drive, bl_drive);
   }
   /** This function is run once each time the robot enters autonomous mode. */
   @Override
