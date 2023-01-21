@@ -14,13 +14,14 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class DriveTrain extends SubsystemBase {
 
-    private CANSparkMax fl_motor = new CANSparkMax(13, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private CANSparkMax fr_motor = new CANSparkMax(11, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private CANSparkMax br_motor = new CANSparkMax(12, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private CANSparkMax bl_motor = new CANSparkMax(14, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private CANSparkMax fl_motor = new CANSparkMax(Constants.MotorConstants.fl_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private CANSparkMax fr_motor = new CANSparkMax(Constants.MotorConstants.fr_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private CANSparkMax br_motor = new CANSparkMax(Constants.MotorConstants.br_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private CANSparkMax bl_motor = new CANSparkMax(Constants.MotorConstants.bl_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
 
     private MotorControllerGroup left_motors  = new MotorControllerGroup(fl_motor, bl_motor);
     private MotorControllerGroup right_motors = new MotorControllerGroup(fr_motor, br_motor);
@@ -59,6 +60,8 @@ public class DriveTrain extends SubsystemBase {
     // Called repeatedly when this Command is scheduled to run
     @Override
     public void execute() {
+      //This is only able to directly access drive_controller becuase it is a nested class
+      //NOTE: if this code is changed to no longer be a nested class (for accessing another subsystem or something), this will no longer be able to directly access the drive (you just need to pass the subsystem and write an accessor method then)
       drive_controller.arcadeDrive(driveSpeed.getAsDouble(), turnSpeed.getAsDouble());
     }
 
