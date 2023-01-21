@@ -31,6 +31,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    configureBindings();
 
     //Set the DriveTrain subsystem to automatically call the drive function by default
     m_DriveTrain.setDefaultCommand(
@@ -38,7 +39,6 @@ public class RobotContainer {
       //    \/  this needs to be "m_DriveTrain.new" instead of just the normal "new" keyword because it is a nested class that is being instanced.
       m_DriveTrain.new ArcadeDriveCommand(() -> -m_driverController.getLeftY(), () -> m_driverController.getRightX()) //technically the second argument can just be passed directly as a lambda (m_dirverController::getRightX), but it is kept as an inline lambda for symmetry
     );
-    configureBindings();
   }
 
   /**
