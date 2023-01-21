@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -34,6 +35,9 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.SerialPort;
 //import com.kauailabs.navx.frc.AHRS;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 //import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -52,8 +56,16 @@ import edu.wpi.first.math.MathUtil;
  * directory.
  */
 public class Robot extends TimedRobot {
-  private final PWMSparkMax m_leftDrive = new PWMSparkMax(0);
-  private final PWMSparkMax m_rightDrive = new PWMSparkMax(1);
+  
+  public CANSparkMax fl_drive;
+  public CANSparkMax br_drive;
+  public CANSparkMax bl_drive;
+  public CANSparkMax fr_drive;
+
+
+  MotorControllerGroup left_motors;
+  MotorControllerGroup right_motors;
+
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftDrive, m_rightDrive);
   private final Joystick m_stick = new Joystick(0);
   private final Timer m_timer = new Timer();
@@ -106,13 +118,20 @@ public class Robot extends TimedRobot {
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
+    left_motors = new MotorControllerGroup(fl_drive, bl_drive);
+   
+   
+   
     m_rightDrive.setInverted(true);
     initializeGamePad();
     shuffleboardStartup();
+
+
+    initializeMotorControllers();
     
     autonSetDrive(0,0);
         
-  
+    left_motors = new MotorControllerGroup(fl_drive, bl_drive)
   }
   /** This function is run once each time the robot enters autonomous mode. */
   @Override
@@ -181,6 +200,12 @@ public class Robot extends TimedRobot {
   public void autonSetDrive(double drive, double turn) {
     autonDriveBuffer = drive;
     autonTurnBuffer = turn;
+  }
+  private void initializeMotorControllers(){  
+    fl_drive = new CANSparkMax(13, MotorType.kBrushless);
+    fr_drive = new CANSparkMax(11, MotorType.kBrushless);
+    bl_drive = new CANSparkMax(14, MotorType.kBrushless);
+    br_drive = new CANSparkMax(12, MotorType.kBrushless);
   }
   
 }
