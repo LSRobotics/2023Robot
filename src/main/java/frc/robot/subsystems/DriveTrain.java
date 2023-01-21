@@ -14,14 +14,14 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.MotorConstants;
 
 public class DriveTrain extends SubsystemBase {
 
-    private CANSparkMax fl_motor = new CANSparkMax(Constants.MotorConstants.fl_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private CANSparkMax fr_motor = new CANSparkMax(Constants.MotorConstants.fr_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private CANSparkMax br_motor = new CANSparkMax(Constants.MotorConstants.br_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private CANSparkMax bl_motor = new CANSparkMax(Constants.MotorConstants.bl_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private CANSparkMax fl_motor = new CANSparkMax(MotorConstants.fl_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private CANSparkMax fr_motor = new CANSparkMax(MotorConstants.fr_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private CANSparkMax br_motor = new CANSparkMax(MotorConstants.br_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private CANSparkMax bl_motor = new CANSparkMax(MotorConstants.bl_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
 
     private MotorControllerGroup left_motors  = new MotorControllerGroup(fl_motor, bl_motor);
     private MotorControllerGroup right_motors = new MotorControllerGroup(fr_motor, br_motor);
