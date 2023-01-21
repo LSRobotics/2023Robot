@@ -4,12 +4,15 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveTrain extends SubsystemBase {
@@ -39,20 +42,30 @@ public class DriveTrain extends SubsystemBase {
     br_motor.setIdleMode(IdleMode.kBrake);
     bl_motor.setIdleMode(IdleMode.kBrake);
 
+  }
+
+  //This is the command for handling ArcadeDrive logic externally. It is located within this subsystem because only this subsystem accesses it.
+  public class ArcadeDriveCommand extends CommandBase {
+
+    //These need to be lambdas (DoubleSupplier functions) because they need to be called every loop, returning different values each time
+    private final DoubleSupplier driveSpeed;
+    private final DoubleSupplier turnSpeed;
+
+    public ArcadeDriveCommand(DoubleSupplier speed, DoubleSupplier turn) {
+        driveSpeed = speed;
+        turnSpeed = turn;
     }
 
-  public void drive(double driveSpeed, double turnSpeed) {
-    //Drive command accessible from outside the class
-    drive_controller.arcadeDrive(driveSpeed, turnSpeed);
-  }
+    // Called repeatedly when this Command is scheduled to run
+    @Override
+    public void execute() {
+      drive_controller.arcadeDrive(driveSpeed.getAsDouble(), turnSpeed.getAsDouble());
+    }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
-
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
+    // Called once after isFinished returns true
+    @Override
+    public void end(boolean interrupted) {
+      drive_controller.arcadeDrive(0, 0);
+    }
   }
 }

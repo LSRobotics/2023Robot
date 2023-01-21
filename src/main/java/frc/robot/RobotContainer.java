@@ -7,7 +7,6 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.ArcadeDrive;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,7 +34,8 @@ public class RobotContainer {
 
     //Set the DriveTrain subsystem to automatically call the drive function by default
     m_DriveTrain.setDefaultCommand(
-      new ArcadeDrive(() -> -m_driverController.getLeftY(), () -> m_driverController.getRightX(), m_DriveTrain)
+      //Accesses the command class ArcadeDriveCommand from within the instanced DriveTrain class.
+      m_DriveTrain.new ArcadeDriveCommand(() -> -m_driverController.getLeftY(), () -> m_driverController.getRightX()) //technically the second argument can just be passed directly as a lambda (m_dirverController::getRightX), but it is kept as an inline lambda for symmetry
     );
     configureBindings();
   }
