@@ -32,6 +32,7 @@ public class DriveTrain extends SubsystemBase {
   public DriveTrain() {
     super();
 
+    //The loopRampRate could be made a constant
     fl_motor.setOpenLoopRampRate(0.5);
     fr_motor.setOpenLoopRampRate(0.5);
     br_motor.setOpenLoopRampRate(0.5);
