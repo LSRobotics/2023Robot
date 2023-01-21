@@ -35,7 +35,7 @@ public class RobotContainer {
 
     //Set the DriveTrain subsystem to automatically call the drive function by default
     m_DriveTrain.setDefaultCommand(
-      new ArcadeDrive(() -> m_driverController.getLeftY(), () -> m_driverController.getRightX(), m_DriveTrain)
+      new ArcadeDrive(() -> -m_driverController.getLeftY(), () -> m_driverController.getRightX(), m_DriveTrain)
     );
     configureBindings();
   }
