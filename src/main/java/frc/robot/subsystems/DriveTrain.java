@@ -46,10 +46,6 @@ public class DriveTrain extends SubsystemBase {
 
   }
 
-  public void arcadeDrive(double speed, double turn) {
-    drive_controller.arcadeDrive(speed, turn);
-  }
-
   //This is the command for handling ArcadeDrive logic externally. It is located within this subsystem because only this subsystem accesses it.
   public class ArcadeDriveCommand extends CommandBase {
 

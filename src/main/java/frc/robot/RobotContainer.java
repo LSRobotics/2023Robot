@@ -12,7 +12,6 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -47,7 +46,7 @@ public class RobotContainer {
     m_DriveTrain.setDefaultCommand(
       //Accesses the command class ArcadeDriveCommand from within the instanced DriveTrain class.
       drivetrain_command
-      );
+    );
   }
 
   /**
