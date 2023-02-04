@@ -19,8 +19,8 @@ public final class Constants {
   }
 
   public static class MotorConstants {
-    public static final int fr_motor_id = 13;
-    public static final int fl_motor_id = 11;
+    public static final int fr_motor_id = 11;
+    public static final int fl_motor_id = 13;
     public static final int br_motor_id = 12;
     public static final int bl_motor_id = 14;
   }

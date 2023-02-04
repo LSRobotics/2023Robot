@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -12,6 +13,8 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -36,13 +39,13 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
-    m_IntakeSubsystem.setDefaultCommand(m_IntakeSubsystem.setIntakePower());
+    final ArcadeDriveCommand command = new ArcadeDriveCommand(() -> -m_driverController.getLeftY(), () -> m_driverController.getRightX(), m_DriveTrain); //technically the second argument can just be passed directly as a lambda (m_dirverController::getRightX), but it is kept as an inline lambda for symmetry
+    command.addRequirements(m_DriveTrain);
     //Set the DriveTrain subsystem to automatically call the drive function by default
     m_DriveTrain.setDefaultCommand(
       //Accesses the command class ArcadeDriveCommand from within the instanced DriveTrain class.
-      //    \/  this needs to be "m_DriveTrain.new" instead of just the normal "new" keyword because it is a nested class that is being instanced.
-      m_DriveTrain.new ArcadeDriveCommand(() -> -m_driverController.getLeftY(), () -> m_driverController.getRightX()) //technically the second argument can just be passed directly as a lambda (m_dirverController::getRightX), but it is kept as an inline lambda for symmetry
-    );
+      command
+      );
   }
 
   /**
@@ -59,8 +62,8 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    m_driverController.b().whileTrue(m_IntakeSubsystem.intakeOut());
-    m_driverController.a().whileTrue(m_IntakeSubsystem.intakeIn());
+    m_driverController.b().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(.3), () -> m_IntakeSubsystem.setPower(0.0)));
+    m_driverController.a().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(-.3), () -> m_IntakeSubsystem.setPower(0.0)));
   }
 
   /**
