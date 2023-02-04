@@ -5,7 +5,6 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -39,12 +38,15 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
-    final ArcadeDriveCommand command = new ArcadeDriveCommand(() -> -m_driverController.getLeftY(), () -> m_driverController.getRightX(), m_DriveTrain); //technically the second argument can just be passed directly as a lambda (m_dirverController::getRightX), but it is kept as an inline lambda for symmetry
-    command.addRequirements(m_DriveTrain);
+    final DriveTrain.ArcadeDriveCommand drivetrain_command = m_DriveTrain.new ArcadeDriveCommand(
+      () -> -m_driverController.getLeftY(),
+      () -> m_driverController.getRightX()
+    ); //technically the second argument can just be passed directly as a lambda (m_dirverController::getRightX), but it is kept as an inline lambda for symmetry
+    drivetrain_command.addRequirements(m_DriveTrain);
     //Set the DriveTrain subsystem to automatically call the drive function by default
     m_DriveTrain.setDefaultCommand(
       //Accesses the command class ArcadeDriveCommand from within the instanced DriveTrain class.
-      command
+      drivetrain_command
       );
   }
 
