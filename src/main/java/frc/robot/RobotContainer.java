@@ -74,13 +74,13 @@ public class RobotContainer {
     Trigger rightTriggerToggle = new Trigger(() -> {
       return m_operatorController.getRightTriggerAxis() > 0.5;
     });
-    
+
     rightTriggerToggle
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_fast_speed)));
     leftTriggerToggle
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_slow_speed)));
 
-    leftTriggerToggle.and(rightTriggerToggle).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_default_speed)));
+    leftTriggerToggle.or(rightTriggerToggle).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_default_speed)));
 
 
     m_operatorController.rightBumper()
@@ -88,7 +88,7 @@ public class RobotContainer {
     m_operatorController.leftBumper()
         .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(-.3)));
 
-    m_operatorController.rightBumper().and(m_driverController.leftBumper()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
+    m_operatorController.rightBumper().or(m_driverController.leftBumper()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
     
 
     m_operatorController.a().onTrue(Commands.runOnce(() -> m_ArmSubsystem.setArmPIDAngles(0.0, 0.0)));
