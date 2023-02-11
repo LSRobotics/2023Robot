@@ -32,6 +32,8 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+  private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -63,12 +65,27 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
+    Trigger leftTriggerToggle = new Trigger(() -> {
+      return m_operatorController.getLeftTriggerAxis() > 0.5;
+    });
+
+    Trigger rightTriggerToggle = new Trigger(() -> {
+      return m_operatorController.getRightTriggerAxis() > 0.5;
+    });
+    rightTriggerToggle
+      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_fast_speed)));
+    leftTriggerToggle
+      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_slow_speed)));
+
+    leftTriggerToggle.and(rightTriggerToggle).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_default_speed)));
+
     m_driverController.rightBumper()
         .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(.3)));
     m_driverController.leftBumper()
         .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(-.3)));
 
     m_driverController.a().and(m_driverController.b()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
+    
   }
 
   /**

@@ -16,6 +16,7 @@ public final class Constants {
   
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
   }
 
   public static class MotorConstants {
@@ -26,5 +27,8 @@ public final class Constants {
   }
   public static class IntakeConstants {
     public static final double intake_motor_speed = .5;
+    public static final double intake_fast_speed = 1.0;
+    public static final double intake_slow_speed = 0.5;
+    public static final double intake_default_speed = 0.75;
   }
 }
