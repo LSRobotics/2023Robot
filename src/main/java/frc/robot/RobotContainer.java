@@ -65,10 +65,11 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
+    //Toggle intake speed based on a threshold 
+    //TODO: Add constants for the trigger thresholds
     Trigger leftTriggerToggle = new Trigger(() -> {
       return m_operatorController.getLeftTriggerAxis() > 0.5;
     });
-
     Trigger rightTriggerToggle = new Trigger(() -> {
       return m_operatorController.getRightTriggerAxis() > 0.5;
     });
@@ -76,14 +77,17 @@ public class RobotContainer {
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_fast_speed)));
     leftTriggerToggle
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_slow_speed)));
-
+    
+      //reset intake speed when both triggers are not being held
     leftTriggerToggle.and(rightTriggerToggle).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_default_speed)));
 
+    //Toggle intake power based on right and left bumper
     m_driverController.rightBumper()
         .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(.3)));
     m_driverController.leftBumper()
         .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(-.3)));
-
+    
+    //disable intake when both buttons are false
     m_driverController.a().and(m_driverController.b()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
     
   }
