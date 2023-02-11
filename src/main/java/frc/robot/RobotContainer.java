@@ -9,6 +9,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,6 +28,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DriveTrain m_DriveTrain = new DriveTrain();
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
+  private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -79,13 +81,16 @@ public class RobotContainer {
 
     leftTriggerToggle.and(rightTriggerToggle).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_default_speed)));
 
-    m_driverController.rightBumper()
+    m_operatorController.rightBumper()
         .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(.3)));
-    m_driverController.leftBumper()
+    m_operatorController.leftBumper()
         .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(-.3)));
 
-    m_driverController.a().and(m_driverController.b()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
+    m_operatorController.rightBumper().and(m_driverController.leftBumper()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
     
+    m_operatorController.a().onTrue(Commands.runOnce(() -> m_ArmSubsystem.setArmPIDPositions(0, 0)));
+
+    m_operatorController.y().onTrue(Commands.runOnce(() -> m_ArmSubsystem.setArmPIDPositions(0, 0)));
   }
 
   /**
