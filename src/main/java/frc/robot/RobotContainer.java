@@ -82,13 +82,13 @@ public class RobotContainer {
     leftTriggerToggle.and(rightTriggerToggle).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_default_speed)));
 
     //Toggle intake power based on right and left bumper
-    m_driverController.rightBumper()
+    m_operatorController.rightBumper()
         .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(.3)));
-    m_driverController.leftBumper()
+    m_operatorController.leftBumper()
         .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(-.3)));
     
     //disable intake when both buttons are false
-    m_driverController.a().and(m_driverController.b()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
+    m_operatorController.a().and(m_operatorController.b()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
     
   }
 
