@@ -24,4 +24,7 @@ public final class Constants {
     public static final int br_motor_id = 12;
     public static final int bl_motor_id = 14;
   }
+  public static class IntakeConstants {
+    public static final double intake_motor_speed = .5;
+  }
 }
