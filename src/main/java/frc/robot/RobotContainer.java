@@ -63,8 +63,12 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    m_driverController.b().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(.3), () -> m_IntakeSubsystem.setPower(0.0)));
-    m_driverController.a().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(-.3), () -> m_IntakeSubsystem.setPower(0.0)));
+    m_driverController.rightBumper()
+        .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(.3)));
+    m_driverController.leftBumper()
+        .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(-.3)));
+
+    m_driverController.a().and(m_driverController.b()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
   }
 
   /**
