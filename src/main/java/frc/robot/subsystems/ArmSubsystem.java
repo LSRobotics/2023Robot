@@ -7,10 +7,11 @@ import frc.robot.Constants;
 
 public class ArmSubsystem extends SubsystemBase {
     
-    public ArmSubsystem() {
-        super();
-    }
     private WPI_TalonSRX upperArmMotor = new WPI_TalonSRX(Constants.ArmConstants.UpperArm.motor_id);
     private WPI_TalonSRX lowerArmMotor = new WPI_TalonSRX(Constants.ArmConstants.LowerArm.motor_id);
     
+    public ArmSubsystem() {
+        super();
+    }
+
 }
