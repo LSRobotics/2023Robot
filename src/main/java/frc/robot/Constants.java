@@ -26,9 +26,30 @@ public final class Constants {
     public static final int bl_motor_id = 14;
   }
   public static class IntakeConstants {
+    public static final int intake1_id = 21;
+    public static final int intake2_id = 22;
+
     public static final double intake_motor_speed = .5;
     public static final double intake_fast_speed = 1.0;
     public static final double intake_slow_speed = 0.5;
     public static final double intake_default_speed = 0.75;
+  }
+  public static class ArmConstants {
+    public static class UpperArm {
+      public static final int motor_id = 0;
+    
+      public static final double kP = 0;
+      public static final double kI = 0;
+      public static final double kD = 0;
+
+    }
+    public static class LowerArm {
+      public static final int motor_id = 0;
+
+      public static final double kP = 0;
+      public static final double kI = 0;
+      public static final double kD = 0;
+
+    }
   }
 }

@@ -10,8 +10,8 @@ public class IntakeSubsystem extends SubsystemBase {
     public IntakeSubsystem() {
         super();
     }
-    private WPI_TalonSRX intake1 = new WPI_TalonSRX(21);
-    private WPI_TalonSRX intake2 = new WPI_TalonSRX(22);
+    private WPI_TalonSRX intake1 = new WPI_TalonSRX(Constants.IntakeConstants.intake1_id);
+    private WPI_TalonSRX intake2 = new WPI_TalonSRX(Constants.IntakeConstants.intake2_id);
     private double intakePowerScalar = Constants.IntakeConstants.intake_default_speed;
     
     public void setPower(double power) {
