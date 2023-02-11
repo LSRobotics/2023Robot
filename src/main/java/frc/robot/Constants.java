@@ -35,6 +35,8 @@ public final class Constants {
     public static final double intake_default_speed = 0.75;
   }
   public static class ArmConstants {
+
+    //TODO: Figure out all of these values
     public static class UpperArm {
       public static final int motor_id = 0;
     
