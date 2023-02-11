@@ -78,7 +78,7 @@ public class RobotContainer {
     leftTriggerToggle
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_slow_speed)));
     
-      //reset intake speed when both triggers are not being held
+    //reset intake speed when both triggers are not being held
     leftTriggerToggle.and(rightTriggerToggle).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_default_speed)));
 
     //Toggle intake power based on right and left bumper
