@@ -39,6 +39,7 @@ public final class Constants {
     //TODO: Figure out all of these values
     public static final double minEncoderAngle = -90;
     public static final double maxEncoderAngle = 90;
+    public static final double encoderUnitsPerRevolution = 4096;
 
     public static class UpperArm {
       public static final int motor_id = 0;

@@ -10,14 +10,14 @@ import frc.robot.Constants.ArmConstants;
 
 public class ArmSubsystem extends SubsystemBase {
     
-    private ArmComponent upperArm = new ArmComponent(
+    private final static ArmComponent upperArm = new ArmComponent(
         ArmConstants.UpperArm.motor_id,
         ArmConstants.UpperArm.kP,
         ArmConstants.UpperArm.kI,
         ArmConstants.UpperArm.kD
     );
 
-    private ArmComponent lowerArm = new ArmComponent(
+    private final static ArmComponent lowerArm = new ArmComponent(
         ArmConstants.LowerArm.motor_id,
         ArmConstants.LowerArm.kP,
         ArmConstants.LowerArm.kI,
@@ -31,6 +31,11 @@ public class ArmSubsystem extends SubsystemBase {
     public void setArmPIDAngles(double lowerArmValue, double upperArmValue) {
         lowerArm.setPIDAngle(lowerArmValue);
         upperArm.setPIDAngle(upperArmValue);
+    }
+
+    public void setArmSpeed(double lowerArmSpeed, double upperArmSpeed) {
+        lowerArm.setManualSpeed(lowerArmSpeed);
+        upperArm.setManualSpeed(upperArmSpeed);
     }
 
 }
@@ -54,7 +59,7 @@ class ArmComponent extends PIDSubsystem {
 
     //in degrees
     public double getMotorAngle() {
-        return motor.getSelectedSensorPosition() * 360 / 4096;
+        return motor.getSelectedSensorPosition() * 360 / ArmConstants.encoderUnitsPerRevolution;
     }
 
     @Override
@@ -65,5 +70,15 @@ class ArmComponent extends PIDSubsystem {
     @Override
     protected double getMeasurement() {
         return getMotorAngle();
+    }
+
+    //These two funtions are just renaming two base commands for clarity
+    //The enable/disable commands do not enable/disable the entire subsystem, but just the PID controller
+    public void enablePIDController() {
+        enable();
+    }
+
+    public void disablePIDController() {
+        disable();
     }
 }
