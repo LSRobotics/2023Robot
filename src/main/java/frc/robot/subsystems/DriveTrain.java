@@ -79,6 +79,11 @@ public class DriveTrain extends SubsystemBase {
     }
 
     @Override
+    public boolean isFinished() {
+      return drivePID.atSetpoint();
+    }
+
+    @Override
     public void end(boolean interrupted) {
       drive_controller.arcadeDrive(0,0);
       drivePID.reset();
@@ -96,6 +101,11 @@ public class DriveTrain extends SubsystemBase {
     public void execute() {
       double speed = MathUtil.clamp(turnPID.calculate(getEncoderAngle()), -DriveTrainConstants.TurnPID.maxSpeed, DriveTrainConstants.TurnPID.maxSpeed);
       drive_controller.arcadeDrive(0, speed);
+    }
+
+    @Override
+    public boolean isFinished() {
+      return turnPID.atSetpoint();
     }
 
     @Override
