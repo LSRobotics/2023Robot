@@ -10,23 +10,29 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorConstants;
+import frc.robot.Constants.DriveTrainConstants;
 
 public class DriveTrain extends SubsystemBase {
 
-    private CANSparkMax fl_motor = new CANSparkMax(MotorConstants.fl_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private CANSparkMax fr_motor = new CANSparkMax(MotorConstants.fr_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private CANSparkMax br_motor = new CANSparkMax(MotorConstants.br_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private CANSparkMax bl_motor = new CANSparkMax(MotorConstants.bl_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
+  private CANSparkMax fl_motor = new CANSparkMax(MotorConstants.fl_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
+  private CANSparkMax fr_motor = new CANSparkMax(MotorConstants.fr_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
+  private CANSparkMax br_motor = new CANSparkMax(MotorConstants.br_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
+  private CANSparkMax bl_motor = new CANSparkMax(MotorConstants.bl_motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
 
-    private MotorControllerGroup left_motors  = new MotorControllerGroup(fl_motor, bl_motor);
-    private MotorControllerGroup right_motors = new MotorControllerGroup(fr_motor, br_motor);
+  private MotorControllerGroup left_motors  = new MotorControllerGroup(fl_motor, bl_motor);
+  private MotorControllerGroup right_motors = new MotorControllerGroup(fr_motor, br_motor);
 
-    private DifferentialDrive drive_controller = new DifferentialDrive(right_motors, left_motors);
+  private DifferentialDrive drive_controller = new DifferentialDrive(right_motors, left_motors);
+
+  private PIDController drivePID = new PIDController(DriveTrainConstants.DrivePID.kP,DriveTrainConstants.DrivePID.kI, DriveTrainConstants.DrivePID.kP);
+  private PIDController turnPID = new PIDController(DriveTrainConstants.TurnPID.kP,DriveTrainConstants.TurnPID.kI,DriveTrainConstants.TurnPID.kD);
 
   /** Creates a new ExampleSubsystem. */
   public DriveTrain() {
@@ -43,7 +49,60 @@ public class DriveTrain extends SubsystemBase {
     fr_motor.setIdleMode(IdleMode.kBrake);
     br_motor.setIdleMode(IdleMode.kBrake);
     bl_motor.setIdleMode(IdleMode.kBrake);
+    
+    //set the controller to understand continuous angle input
+    turnPID.enableContinuousInput(-180, 180);
+  }
 
+  private double getEncoderValue() {
+    //NOTE: IMPLEMENT THIS
+    return 0;
+  }
+
+  private double getEncoderAngle() {
+    //NOTE: IMPLEMENT THIS
+    return 0;
+  }
+
+  public class pidDrive extends CommandBase {
+
+    public pidDrive(double distance) {
+      //NOTE: ACTUALLY CALCULATE DISTANCE
+      drivePID.reset();
+      drivePID.setSetpoint(distance);
+    }
+
+    @Override
+    public void execute() {
+      double speed = MathUtil.clamp(drivePID.calculate(getEncoderValue()), -DriveTrainConstants.DrivePID.maxSpeed, DriveTrainConstants.DrivePID.maxSpeed);
+      drive_controller.arcadeDrive(speed, 0);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+      drive_controller.arcadeDrive(0,0);
+      drivePID.reset();
+    }
+  }
+
+  public class pidTurn extends CommandBase {
+    public pidTurn(double angle) {
+      //NOTE: ACTUALLY CALCULATE DISTANCE
+      turnPID.reset();
+      turnPID.setSetpoint(angle);
+    }
+
+    @Override
+    public void execute() {
+      double speed = MathUtil.clamp(turnPID.calculate(getEncoderAngle()), -DriveTrainConstants.TurnPID.maxSpeed, DriveTrainConstants.TurnPID.maxSpeed);
+      drive_controller.arcadeDrive(0, speed);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+      drive_controller.arcadeDrive(0,0);
+      turnPID.reset();
+    }
   }
 
   //This is the command for handling ArcadeDrive logic externally. It is located within this subsystem because only this subsystem accesses it.

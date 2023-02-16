@@ -25,6 +25,20 @@ public final class Constants {
     public static final int br_motor_id = 12;
     public static final int bl_motor_id = 14;
   }
+  public static class DriveTrainConstants {
+    public static class DrivePID {
+      public static final double maxSpeed = .5;
+      public static final double kP = 0;
+      public static final double kI = 0;
+      public static final double kD = 0;
+    }
+    public static class TurnPID {
+      public static final double maxSpeed = .5;
+      public static final double kP = 0;
+      public static final double kI = 0;
+      public static final double kD = 0;
+    }
+  }
   public static class IntakeConstants {
     public static final int intake1_id = 21;
     public static final int intake2_id = 22;
