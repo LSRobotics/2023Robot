@@ -16,12 +16,19 @@ public final class Constants {
   
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
   }
 
   public static class MotorConstants {
-    public static final int fr_motor_id = 13;
-    public static final int fl_motor_id = 11;
+    public static final int fr_motor_id = 11;
+    public static final int fl_motor_id = 13;
     public static final int br_motor_id = 12;
     public static final int bl_motor_id = 14;
+  }
+  public static class IntakeConstants {
+    public static final double intake_motor_speed = .5;
+    public static final double intake_fast_speed = 1.0;
+    public static final double intake_slow_speed = 0.5;
+    public static final double intake_default_speed = 0.75;
   }
 }
