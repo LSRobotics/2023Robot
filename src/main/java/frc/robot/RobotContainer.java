@@ -42,7 +42,7 @@ public class RobotContainer {
 
     final DriveTrain.ArcadeDriveCommand drivetrain_command = m_DriveTrain.new ArcadeDriveCommand(
       () -> -m_driverController.getLeftY(),
-      () -> m_driverController.getRightX()
+      () -> {return (m_driverController.getRightTriggerAxis() - m_driverController.getRightTriggerAxis());}
     ); //technically the second argument can just be passed directly as a lambda (m_dirverController::getRightX), but it is kept as an inline lambda for symmetry
     drivetrain_command.addRequirements(m_DriveTrain);
     //Set the DriveTrain subsystem to automatically call the drive function by default
