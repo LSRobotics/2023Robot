@@ -54,23 +54,24 @@ public final class Constants {
     public static final double minEncoderAngle = -90;
     public static final double maxEncoderAngle = 90;
     public static final double encoderUnitsPerRevolution = 4096;
-    public static final double lowerArmSpeed = 0.2;
-    public static final double upperArmSpeed = 0.2;
 
     public static class UpperArm {
       public static final int motor_id = 31;
     
-      public static final double kP = 0;
+      public static final double kP = .1;
       public static final double kI = 0;
       public static final double kD = 0;
+      public static final double speedScalar = 0.2;
 
     }
     public static class LowerArm {
       public static final int motor_id = 32;
 
-      public static final double kP = 0;
+      public static final double kP = .1;
       public static final double kI = 0;
       public static final double kD = 0;
+      public static final double speedScalar = 0.2;
+
 
     }
   }
