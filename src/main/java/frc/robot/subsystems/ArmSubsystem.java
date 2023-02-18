@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 
 public class ArmSubsystem extends SubsystemBase {
     
@@ -14,14 +15,16 @@ public class ArmSubsystem extends SubsystemBase {
         ArmConstants.UpperArm.motor_id,
         ArmConstants.UpperArm.kP,
         ArmConstants.UpperArm.kI,
-        ArmConstants.UpperArm.kD
+        ArmConstants.UpperArm.kD,
+        ArmConstants.UpperArm.speedScalar
     );
 
     private final static ArmComponent lowerArm = new ArmComponent(
         ArmConstants.LowerArm.motor_id,
         ArmConstants.LowerArm.kP,
         ArmConstants.LowerArm.kI,
-        ArmConstants.LowerArm.kD
+        ArmConstants.LowerArm.kD,
+        ArmConstants.LowerArm.speedScalar
     );
 
     public ArmSubsystem() {
@@ -33,19 +36,22 @@ public class ArmSubsystem extends SubsystemBase {
         upperArm.setPIDAngle(upperArmValue);
     }
 
-    public void setArmSpeed(double lowerArmSpeed, double upperArmSpeed) {
-        lowerArm.setManualSpeed(lowerArmSpeed);
-        upperArm.setManualSpeed(upperArmSpeed);
-    }
+    // public void setArmSpeed(double lowerArmSpeed, double upperArmSpeed) {
+    //     lowerArm.setManualSpeed(lowerArmSpeed);
+    //     upperArm.setManualSpeed(upperArmSpeed);
+    // }
 
 }
 
 class ArmComponent extends PIDSubsystem {
     private WPI_TalonSRX motor;
+    private double speedScalar;
 
-    public ArmComponent(int motor_id, double kP, double kI, double kD) {
+    public ArmComponent(int motor_id, double kP, double kI, double kD, double speedScalar) {
         super(new PIDController(kP, kI, kD));
         motor = new WPI_TalonSRX(motor_id);
+        this.speedScalar = speedScalar;
+        //This is usually what we do with angle PIDs, but this might not be necessary since we're not rotating a full 360 degrees
         //pid.enableContinuousInput(ArmConstants.minEncoderAngle, ArmConstants.maxEncoderAngle );
     }
 
@@ -53,9 +59,9 @@ class ArmComponent extends PIDSubsystem {
         m_controller.setSetpoint(value);
     }
 
-    public void setManualSpeed(double speed) {
-        motor.set(speed);
-    }
+    // public void setManualSpeed(double speed) {
+    //     motor.set(speed);
+    // }
 
     //in degrees
     public double getMotorAngle() {
@@ -64,7 +70,7 @@ class ArmComponent extends PIDSubsystem {
 
     @Override
     protected void useOutput(double output, double setpoint) {
-        motor.set(MathUtil.clamp(output, -.5, .5));
+        motor.set(MathUtil.clamp(output, -speedScalar, speedScalar));
     }
 
     @Override
