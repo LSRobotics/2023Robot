@@ -132,7 +132,7 @@ public class DriveTrain extends SubsystemBase {
     public void execute() {
       //This is only able to directly access drive_controller becuase it is a nested class
       //NOTE: if this code is changed to no longer be a nested class (for accessing another subsystem or something), this will no longer be able to directly access the drive (you just need to pass the subsystem and write an accessor method then)
-      drive_controller.arcadeDrive(driveSpeed.getAsDouble(), turnSpeed.getAsDouble());
+      drive_controller.arcadeDrive(driveSpeed.getAsDouble()*.7, turnSpeed.getAsDouble()*.5);
     }
 
     // Called once after isFinished returns true
