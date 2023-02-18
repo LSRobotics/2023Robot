@@ -28,7 +28,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DriveTrain m_DriveTrain = new DriveTrain();
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
-  //private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
+  private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -98,6 +98,9 @@ public class RobotContainer {
     m_operatorController.rightBumper().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(-.5), () -> m_IntakeSubsystem.setPower(0.0)));
     //m_operatorController.a().onTrue(Commands.runOnce(() -> m_ArmSubsystem.setArmPIDAngles(0.0, 0.0)));
     //m_operatorController.y().onTrue(Commands.runOnce(() -> m_ArmSubsystem.setArmPIDAngles(0.0, 0.0)));
+    m_operatorController.leftBumper().whileTrue(Commands.startEnd( () -> m_ArmSubsystem.setArmSpeed(0.2,0.2), () -> m_ArmSubsystem.setArmSpeed(0.0, 0.0)));
+    m_operatorController.leftBumper().whileTrue(Commands.startEnd( () -> m_ArmSubsystem.setArmPIDAngles(1024.0,1024.0), () -> m_ArmSubsystem.setArmPIDAngles(0.0, 0.0)));
+
   }
 
 
