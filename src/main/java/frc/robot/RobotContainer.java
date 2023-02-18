@@ -28,13 +28,14 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DriveTrain m_DriveTrain = new DriveTrain();
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
-  private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
+  //private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-  private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
+  private final CommandXboxController m_operatorController = 
+      new CommandXboxController(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -42,8 +43,8 @@ public class RobotContainer {
     configureBindings();
 
     final DriveTrain.ArcadeDriveCommand drivetrain_command = m_DriveTrain.new ArcadeDriveCommand(
-      () -> -m_driverController.getLeftY(),
-      () -> m_driverController.getRightX()
+      () -> (m_driverController.getRightTriggerAxis() - m_driverController.getLeftTriggerAxis()),
+      () -> m_driverController.getLeftX()
     ); //technically the second argument can just be passed directly as a lambda (m_dirverController::getRightX), but it is kept as an inline lambda for symmetry
     drivetrain_command.addRequirements(m_DriveTrain);
     //Set the DriveTrain subsystem to automatically call the drive function by default
@@ -67,14 +68,16 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    Trigger leftTriggerToggle = new Trigger(() -> {
-      return m_operatorController.getLeftTriggerAxis() > 0.5;
-    });
 
+/* 
     Trigger rightTriggerToggle = new Trigger(() -> {
       return m_operatorController.getRightTriggerAxis() > 0.5;
     });
-
+    Trigger leftTriggerToggle = new Trigger(() -> {
+      return m_operatorController.getLeftTriggerAxis() > 0.5;
+    });
+  */
+/*
     rightTriggerToggle
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_fast_speed)));
     leftTriggerToggle
@@ -82,19 +85,23 @@ public class RobotContainer {
 
     leftTriggerToggle.or(rightTriggerToggle).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_default_speed)));
 
-
+    
     m_operatorController.rightBumper()
         .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(.3)));
     m_operatorController.leftBumper()
         .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(-.3)));
 
     m_operatorController.rightBumper().or(m_driverController.leftBumper()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
-    
-
-    m_operatorController.a().onTrue(Commands.runOnce(() -> m_ArmSubsystem.setArmPIDAngles(0.0, 0.0)));
-    m_operatorController.y().onTrue(Commands.runOnce(() -> m_ArmSubsystem.setArmPIDAngles(0.0, 0.0)));
+    */
+    m_operatorController.leftTrigger().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(.3), () -> m_IntakeSubsystem.setPower(0.0)));
+    m_operatorController.rightTrigger().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(.5), () -> m_IntakeSubsystem.setPower(0.0)));
+    m_operatorController.rightBumper().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(-.5), () -> m_IntakeSubsystem.setPower(0.0)));
+    //m_operatorController.a().onTrue(Commands.runOnce(() -> m_ArmSubsystem.setArmPIDAngles(0.0, 0.0)));
+    //m_operatorController.y().onTrue(Commands.runOnce(() -> m_ArmSubsystem.setArmPIDAngles(0.0, 0.0)));
   }
 
+
+    
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
