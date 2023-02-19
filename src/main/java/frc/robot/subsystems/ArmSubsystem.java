@@ -57,6 +57,7 @@ class ArmComponent extends PIDSubsystem {
 
     public void setPIDAngle(double value) {
         m_controller.setSetpoint(value);
+        enable();
     }
 
     // public void setManualSpeed(double speed) {
@@ -70,6 +71,9 @@ class ArmComponent extends PIDSubsystem {
 
     @Override
     protected void useOutput(double output, double setpoint) {
+        if (m_controller.atSetpoint()) {
+            disable();
+        }
         motor.set(MathUtil.clamp(output, -speedScalar, speedScalar));
     }
 
