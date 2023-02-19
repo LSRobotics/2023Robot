@@ -11,6 +11,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.VisionSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -29,6 +30,7 @@ public class RobotContainer {
   private final DriveTrain m_DriveTrain = new DriveTrain();
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
   private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
+  private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -64,6 +66,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
+
+
+    m_driverController.a()
+      .onTrue(Commands.runOnce(() -> m_VisionSubsystem.printValues()));
     
     m_operatorController.leftTrigger() //intake slow
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.intake_slow_speed)));
