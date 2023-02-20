@@ -9,6 +9,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,12 +29,14 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DriveTrain m_DriveTrain = new DriveTrain();
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
+  private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-  private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
+  private final CommandXboxController m_operatorController = 
+      new CommandXboxController(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -62,37 +65,35 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    m_operatorController.leftTrigger() //intake slow
+      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.intake_slow_speed)));
+    m_operatorController.rightTrigger() //intake fast
+      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.intake_fast_speed)));
+    m_operatorController.rightBumper() //outtake (shoot object out of intake)
+      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(-Constants.IntakeConstants.intake_fast_speed)));
 
-    //Toggle intake speed based on a threshold 
-    //TODO: Add constants for the trigger thresholds
-    Trigger leftTriggerToggle = new Trigger(() -> {
-      return m_operatorController.getLeftTriggerAxis() > 0.5;
-    });
-    Trigger rightTriggerToggle = new Trigger(() -> {
-      return m_operatorController.getRightTriggerAxis() > 0.5;
-    });
-    rightTriggerToggle
-      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_fast_speed)));
-    leftTriggerToggle
-      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_slow_speed)));
-    
-    //reset intake speed when both triggers are not being held
-    leftTriggerToggle.and(rightTriggerToggle).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPowerScalar(Constants.IntakeConstants.intake_default_speed)));
+    m_operatorController.rightTrigger().or(m_driverController.leftTrigger()).or(m_operatorController.rightBumper()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
 
-    //Toggle intake power based on right and left bumper
-    m_operatorController.rightBumper()
-        .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(.3)));
-    m_operatorController.leftBumper()
-        .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(-.3)));
-    
-    //disable intake when both buttons are false
-    m_operatorController.a().and(m_operatorController.b()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
-    
+    m_operatorController.a().onTrue(Commands.runOnce(() -> {
+      m_ArmSubsystem.setArmPIDAngles(75, 15);
+      System.out.println("BAZINGA");
+    }));
+    m_operatorController.b().onTrue(Commands.runOnce(() -> {
+      m_ArmSubsystem.setArmPIDAngles(0,0);
+      System.out.println("BAZLOOPER");
+    }));
+
+    // m_operatorController.leftTrigger().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(.3), () -> m_IntakeSubsystem.setPower(0.0)));
+    // m_operatorController.rightTrigger().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(.5), () -> m_IntakeSubsystem.setPower(0.0)));
+    // m_operatorController.rightBumper().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(-.5), () -> m_IntakeSubsystem.setPower(0.0)));
+
+    //m_operatorController.leftBumper().whileTrue(Commands.startEnd( () -> m_ArmSubsystem.setArmSpeed(0.2,0.2), () -> m_ArmSubsystem.setArmSpeed(0.0, 0.0)));
+    //m_operatorController.leftBumper().whileTrue(Commands.startEnd( () -> m_ArmSubsystem.setArmPIDAngles(90,90), () -> m_ArmSubsystem.setArmPIDAngles(0.0, 0.0)));
+
   }
 
+
+    
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

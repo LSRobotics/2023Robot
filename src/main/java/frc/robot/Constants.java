@@ -25,10 +25,54 @@ public final class Constants {
     public static final int br_motor_id = 12;
     public static final int bl_motor_id = 14;
   }
+  public static class DriveTrainConstants {
+    public static class DrivePID {
+      public static final double maxSpeed = .5;
+      public static final double kP = 0;
+      public static final double kI = 0;
+      public static final double kD = 0;
+    }
+    public static class TurnPID {
+      public static final double maxSpeed = .5;
+      public static final double kP = 0;
+      public static final double kI = 0;
+      public static final double kD = 0;
+    }
+  }
   public static class IntakeConstants {
+    public static final int intake1_id = 21;
+    public static final int intake2_id = 22;
+
     public static final double intake_motor_speed = .5;
     public static final double intake_fast_speed = 1.0;
     public static final double intake_slow_speed = 0.5;
     public static final double intake_default_speed = 0.75;
+  }
+  public static class ArmConstants {
+
+    //TODO: Figure out all of these values
+    public static final double minEncoderAngle = -90;
+    public static final double maxEncoderAngle = 90;
+    public static final double encoderUnitsPerRevolution = 4096;
+
+    public static class UpperArm {
+      public static final int motor_id = 31;
+    
+      public static final double kP = .1;
+      public static final double kI = 0;
+      public static final double kD = 0;
+      public static final double speedScalar = 0.1;
+
+    }
+    public static class LowerArm {
+      public static final int motor_id = 32;
+
+      public static final double kP = .1;
+      public static final double kI = 0;
+      public static final double kD = 0;
+      public static final double speedScalar = 0.1;
+
+
+    }
   }
 }
