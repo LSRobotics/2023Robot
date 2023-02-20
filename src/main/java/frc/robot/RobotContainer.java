@@ -75,7 +75,7 @@ public class RobotContainer {
     m_operatorController.rightTrigger().or(m_driverController.leftTrigger()).or(m_operatorController.rightBumper()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
 
     m_operatorController.a().onTrue(Commands.runOnce(() -> {
-      m_ArmSubsystem.setArmPIDAngles(75, 15);
+      m_ArmSubsystem.setArmPIDAngles(-75, -15);
       System.out.println("BAZINGA");
     }));
     m_operatorController.b().onTrue(Commands.runOnce(() -> {

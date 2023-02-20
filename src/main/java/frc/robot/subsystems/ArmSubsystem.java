@@ -66,6 +66,7 @@ class ArmComponent extends PIDSubsystem {
 
     // in degrees
     public double getMotorAngle() {
+        //This should be made positive or negative based on how the motors are mounted
         return motor.getSelectedSensorPosition() * 360 / ArmConstants.encoderUnitsPerRevolution;
     }
 
@@ -77,6 +78,13 @@ class ArmComponent extends PIDSubsystem {
     @Override
     protected double getMeasurement() {
         return getMotorAngle();
+    }
+
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+        super.periodic();
+        System.out.println(getMotorAngle());
     }
 
     // These two funtions are just renaming two base commands for clarity
