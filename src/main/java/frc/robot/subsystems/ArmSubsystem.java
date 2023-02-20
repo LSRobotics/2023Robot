@@ -10,22 +10,20 @@ import frc.robot.Constants.ArmConstants;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 
 public class ArmSubsystem extends SubsystemBase {
-    
+
     private final static ArmComponent upperArm = new ArmComponent(
-        ArmConstants.UpperArm.motor_id,
-        ArmConstants.UpperArm.kP,
-        ArmConstants.UpperArm.kI,
-        ArmConstants.UpperArm.kD,
-        ArmConstants.UpperArm.speedScalar
-    );
+            ArmConstants.UpperArm.motor_id,
+            ArmConstants.UpperArm.kP,
+            ArmConstants.UpperArm.kI,
+            ArmConstants.UpperArm.kD,
+            ArmConstants.UpperArm.speedScalar);
 
     private final static ArmComponent lowerArm = new ArmComponent(
-        ArmConstants.LowerArm.motor_id,
-        ArmConstants.LowerArm.kP,
-        ArmConstants.LowerArm.kI,
-        ArmConstants.LowerArm.kD,
-        ArmConstants.LowerArm.speedScalar
-    );
+            ArmConstants.LowerArm.motor_id,
+            ArmConstants.LowerArm.kP,
+            ArmConstants.LowerArm.kI,
+            ArmConstants.LowerArm.kD,
+            ArmConstants.LowerArm.speedScalar);
 
     public ArmSubsystem() {
         super();
@@ -37,8 +35,8 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     // public void setArmSpeed(double lowerArmSpeed, double upperArmSpeed) {
-    //     lowerArm.setManualSpeed(lowerArmSpeed);
-    //     upperArm.setManualSpeed(upperArmSpeed);
+    // lowerArm.setManualSpeed(lowerArmSpeed);
+    // upperArm.setManualSpeed(upperArmSpeed);
     // }
 
 }
@@ -51,8 +49,10 @@ class ArmComponent extends PIDSubsystem {
         super(new PIDController(kP, kI, kD));
         motor = new WPI_TalonSRX(motor_id);
         this.speedScalar = speedScalar;
-        //This is usually what we do with angle PIDs, but this might not be necessary since we're not rotating a full 360 degrees
-        //pid.enableContinuousInput(ArmConstants.minEncoderAngle, ArmConstants.maxEncoderAngle );
+        // This is usually what we do with angle PIDs, but this might not be necessary
+        // since we're not rotating a full 360 degrees
+        // pid.enableContinuousInput(ArmConstants.minEncoderAngle,
+        // ArmConstants.maxEncoderAngle );
     }
 
     public void setPIDAngle(double value) {
@@ -61,19 +61,16 @@ class ArmComponent extends PIDSubsystem {
     }
 
     // public void setManualSpeed(double speed) {
-    //     motor.set(speed);
+    // motor.set(speed);
     // }
 
-    //in degrees
+    // in degrees
     public double getMotorAngle() {
         return motor.getSelectedSensorPosition() * 360 / ArmConstants.encoderUnitsPerRevolution;
     }
 
     @Override
     protected void useOutput(double output, double setpoint) {
-        if (m_controller.atSetpoint()) {
-            disable();
-        }
         motor.set(MathUtil.clamp(output, -speedScalar, speedScalar));
     }
 
@@ -82,8 +79,9 @@ class ArmComponent extends PIDSubsystem {
         return getMotorAngle();
     }
 
-    //These two funtions are just renaming two base commands for clarity
-    //The enable/disable commands do not enable/disable the entire subsystem, but just the PID controller
+    // These two funtions are just renaming two base commands for clarity
+    // The enable/disable commands do not enable/disable the entire subsystem, but
+    // just the PID controller
     public void enablePIDController() {
         enable();
     }
