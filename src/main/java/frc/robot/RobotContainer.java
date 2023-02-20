@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -43,8 +44,8 @@ public class RobotContainer {
     configureBindings();
 
     final DriveTrain.ArcadeDriveCommand drivetrain_command = m_DriveTrain.new ArcadeDriveCommand(
-      () -> (m_driverController.getRightTriggerAxis() - m_driverController.getLeftTriggerAxis()),
-      () -> m_driverController.getLeftX()
+      () -> -m_driverController.getLeftY(),
+      () -> {return (m_driverController.getRightTriggerAxis() - m_driverController.getRightTriggerAxis());}
     ); //technically the second argument can just be passed directly as a lambda (m_dirverController::getRightX), but it is kept as an inline lambda for symmetry
     drivetrain_command.addRequirements(m_DriveTrain);
     //Set the DriveTrain subsystem to automatically call the drive function by default
@@ -64,7 +65,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    
     m_operatorController.leftTrigger() //intake slow
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.intake_slow_speed)));
     m_operatorController.rightTrigger() //intake fast
