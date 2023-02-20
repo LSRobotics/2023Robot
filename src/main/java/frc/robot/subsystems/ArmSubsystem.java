@@ -67,7 +67,7 @@ class ArmComponent extends PIDSubsystem {
     // in degrees
     public double getMotorAngle() {
         //This should be made positive or negative based on how the motors are mounted
-        return motor.getSelectedSensorPosition() * 360 / ArmConstants.encoderUnitsPerRevolution;
+        return motor.getSelectedSensorPosition() / ArmConstants.encoderUnitsPerRevolution;
     }
 
     @Override
