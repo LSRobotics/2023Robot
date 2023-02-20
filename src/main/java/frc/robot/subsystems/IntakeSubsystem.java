@@ -13,14 +13,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private CANSparkMax intakeMotor = new CANSparkMax(IntakeConstants.motor_id, CANSparkMaxLowLevel.MotorType.kBrushless);
 
-    private double intakePowerScalar = IntakeConstants.intake_default_speed;
-    
     public void setPower(double power) {
         intakeMotor.set(power);
-    }
-
-    public void setPowerScalar(double scalar) {
-        intakePowerScalar = scalar;
     }
         
 }
