@@ -7,15 +7,13 @@ package frc.robot.subsystems;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.DriveTrainConstants;
@@ -36,6 +34,8 @@ public class DriveTrain extends SubsystemBase {
       DriveTrainConstants.DrivePID.kP);
   private PIDController turnPID = new PIDController(DriveTrainConstants.TurnPID.kP, DriveTrainConstants.TurnPID.kI,
       DriveTrainConstants.TurnPID.kD);
+  private PIDController tiltPID = new PIDController(DriveTrainConstants.TiltPID.kP, DriveTrainConstants.TiltPID.kI,
+      DriveTrainConstants.TiltPID.kD);
 
   /** Creates a new ExampleSubsystem. */
   public DriveTrain() {
@@ -51,61 +51,50 @@ public class DriveTrain extends SubsystemBase {
     return 0;
   }
 
-  private double getEncoderAngle() {
+  private double getTurnAngle() {
     // NOTE: IMPLEMENT THIS
     return 0;
   }
 
-  public class pidDrive extends CommandBase {
+  private double getTiltAngle() {
+    // NOTE: IMPLEMENT THIS
+    return 0;
+  }
 
+
+  public class pidDrive extends PIDCommand {
     public pidDrive(double distance) {
-      // NOTE: ACTUALLY CALCULATE DISTANCE
-      drivePID.reset();
-      drivePID.setSetpoint(distance);
-    }
-
-    @Override
-    public void execute() {
-      double speed = MathUtil.clamp(drivePID.calculate(getEncoderValue()), -DriveTrainConstants.DrivePID.maxSpeed,
-          DriveTrainConstants.DrivePID.maxSpeed);
-      drive_controller.arcadeDrive(speed, 0);
-    }
-
-    @Override
-    public boolean isFinished() {
-      return drivePID.atSetpoint();
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-      drive_controller.arcadeDrive(0, 0);
-      drivePID.reset();
+      super(drivePID, 
+      () -> {return getEncoderValue();},
+      distance, 
+      (double output) -> {
+        double speed = MathUtil.clamp(output, -DriveTrainConstants.DrivePID.maxSpeed, DriveTrainConstants.DrivePID.maxSpeed);
+        drive_controller.arcadeDrive(speed, 0);
+      });
     }
   }
 
-  public class pidTurn extends CommandBase {
+  public class pidTurn extends PIDCommand {
     public pidTurn(double angle) {
-      // NOTE: ACTUALLY CALCULATE DISTANCE
-      turnPID.reset();
-      turnPID.setSetpoint(angle);
+      super(turnPID, 
+      () -> {return getTurnAngle();},
+      angle,
+      (double output) -> {
+        double turnSpeed = MathUtil.clamp(output, -DriveTrainConstants.TurnPID.maxSpeed, DriveTrainConstants.TurnPID.maxSpeed);
+        drive_controller.arcadeDrive(0, turnSpeed);
+      });
     }
+  }
 
-    @Override
-    public void execute() {
-      double speed = MathUtil.clamp(turnPID.calculate(getEncoderAngle()), -DriveTrainConstants.TurnPID.maxSpeed,
-          DriveTrainConstants.TurnPID.maxSpeed);
-      drive_controller.arcadeDrive(0, speed);
-    }
-
-    @Override
-    public boolean isFinished() {
-      return turnPID.atSetpoint();
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-      drive_controller.arcadeDrive(0, 0);
-      turnPID.reset();
+  public class autoBalance extends PIDCommand {
+    public autoBalance() {
+      super(tiltPID,
+      () -> {return getTiltAngle();},
+      0,
+      (double output) -> {
+        double speed = MathUtil.clamp(output, -DriveTrainConstants.TiltPID.maxSpeed, DriveTrainConstants.TiltPID.maxSpeed);
+        drive_controller.arcadeDrive(speed, 0);
+      });
     }
   }
 
@@ -141,5 +130,6 @@ public class DriveTrain extends SubsystemBase {
       drive_controller.arcadeDrive(0, 0);
     }
   }
+  
 
 }
