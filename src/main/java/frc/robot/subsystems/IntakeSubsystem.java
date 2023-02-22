@@ -17,13 +17,13 @@ public class IntakeSubsystem extends SubsystemBase {
         super();
     }
 
-    private CANSparkMax intakeMotor = new CANSparkMax(15, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private WPI_TalonSRX intakeMotor = new WPI_TalonSRX(15);
 
     private double intakePowerScalar = Constants.IntakeConstants.intake_default_speed;
     
     public void setPower(double power) {
         intakeMotor.set(power);
-    }
+    } 
 
     public void setPowerScalar(double scalar) {
         intakePowerScalar = scalar;
