@@ -11,8 +11,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
-
-
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -31,7 +30,8 @@ public class RobotContainer {
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
   private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
  
-
+  private SlewRateLimiter filter = new SlewRateLimiter(0.5);
+  private SlewRateLimiter filter2 = new SlewRateLimiter(.5);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -45,8 +45,8 @@ public class RobotContainer {
     configureBindings();
 
     final DriveTrain.ArcadeDriveCommand drivetrain_command = m_DriveTrain.new ArcadeDriveCommand(
-      () -> (m_driverController.getRightTriggerAxis() - m_driverController.getLeftTriggerAxis()),
-      () -> m_driverController.getLeftX()
+      () -> (filter.calculate(m_driverController.getRightTriggerAxis() - m_driverController.getLeftTriggerAxis())),
+      () -> filter2.calculate(m_driverController.getLeftX())
     ); //technically the second argument can just be passed directly as a lambda (m_dirverController::getRightX), but it is kept as an inline lambda for symmetry
     drivetrain_command.addRequirements(m_DriveTrain);
     //Set the DriveTrain subsystem to automatically call the drive function by default
