@@ -30,8 +30,8 @@ public class RobotContainer {
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
   private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
  
-  private SlewRateLimiter filter = new SlewRateLimiter(0.5);
-  private SlewRateLimiter filter2 = new SlewRateLimiter(.5);
+  private SlewRateLimiter filter = new SlewRateLimiter(1);
+  private SlewRateLimiter filter2 = new SlewRateLimiter(1);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -45,8 +45,10 @@ public class RobotContainer {
     configureBindings();
 
     final DriveTrain.ArcadeDriveCommand drivetrain_command = m_DriveTrain.new ArcadeDriveCommand(
-      () -> (filter.calculate(m_driverController.getRightTriggerAxis() - m_driverController.getLeftTriggerAxis())),
-      () -> filter2.calculate(m_driverController.getLeftX())
+      () -> {
+        return filter.calculate(.7*(m_driverController.getRightTriggerAxis() - m_driverController.getLeftTriggerAxis()));
+      },
+      () -> {return filter2.calculate(.5*m_driverController.getLeftX());}
     ); //technically the second argument can just be passed directly as a lambda (m_dirverController::getRightX), but it is kept as an inline lambda for symmetry
     drivetrain_command.addRequirements(m_DriveTrain);
     //Set the DriveTrain subsystem to automatically call the drive function by default
@@ -66,10 +68,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
-
-
-   
     
     m_operatorController.leftTrigger() //intake slow
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.intake_slow_speed)));
@@ -78,14 +76,14 @@ public class RobotContainer {
     m_operatorController.rightBumper() //outtake (shoot object out of intake)
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(-Constants.IntakeConstants.intake_fast_speed)));
 
-    m_operatorController.rightTrigger().or(m_driverController.leftTrigger()).or(m_operatorController.rightBumper()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
+    m_operatorController.rightTrigger().or(m_operatorController.leftTrigger()).or(m_operatorController.rightBumper()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
 
     m_operatorController.a().onTrue(Commands.runOnce(() -> {
-      m_ArmSubsystem.setArmSpeed(1);
+      m_ArmSubsystem.setArmSpeed(.2);
       System.out.println("BAZINGA");
     }));
     m_operatorController.b().onTrue(Commands.runOnce(() -> {
-      m_ArmSubsystem.setArmSpeed(-1);
+      m_ArmSubsystem.setArmSpeed(-.2);
       System.out.println("BAZLOOPER");
     }));
 

@@ -126,7 +126,7 @@ public class DriveTrain extends SubsystemBase {
       // another subsystem or something), this will no longer be able to directly
       // access the drive (you just need to pass the subsystem and write an accessor
       // method then)
-      drive_controller.arcadeDrive(driveSpeed.getAsDouble() * .7, turnSpeed.getAsDouble() * .5);
+      drive_controller.arcadeDrive(driveSpeed.getAsDouble(), turnSpeed.getAsDouble());
     }
 
     // Called once after isFinished returns true

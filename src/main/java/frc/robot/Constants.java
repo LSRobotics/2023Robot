@@ -20,10 +20,10 @@ public final class Constants {
   }
 
   public static class MotorConstants {
-    public static final int fr_motor_id = 11;
-    public static final int fl_motor_id = 13;
-    public static final int br_motor_id = 12;
-    public static final int bl_motor_id = 14;
+    public static final int fr_motor_id = 5;
+    public static final int fl_motor_id = 4;
+    public static final int br_motor_id = 2;
+    public static final int bl_motor_id = 3;
   }
   public static class DriveTrainConstants {
     public static class DrivePID {
@@ -50,13 +50,12 @@ public final class Constants {
     public static final int intake2_id = 22;
 
     public static final double intake_motor_speed = .5;
-    public static final double intake_fast_speed = 1.0;
-    public static final double intake_slow_speed = 0.5;
-    public static final double intake_default_speed = 0.75;
+    public static final double intake_fast_speed = 0.5;
+    public static final double intake_slow_speed = 0.25;
   }
   public static class ArmConstants {
 
     //TODO: Figure out all of these values
-    public static final int motor_id = 31;
+    public static final int motor_id = 32;
   }
 }
