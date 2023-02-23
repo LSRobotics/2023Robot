@@ -56,7 +56,7 @@ public final class Constants {
     public static final int intake2_id = 22;
 
     public static final double intake_motor_speed = .5;
-    public static final double intake_fast_speed = 0.5;
+    public static final double intake_fast_speed = .75;
     public static final double intake_slow_speed = 0.25;
   }
   public static class ArmConstants {
