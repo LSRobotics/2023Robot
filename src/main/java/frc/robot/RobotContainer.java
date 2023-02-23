@@ -74,7 +74,9 @@ public class RobotContainer {
     m_operatorController.rightTrigger() //intake fast
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.intake_fast_speed)));
     m_operatorController.rightBumper() //outtake (shoot object out of intake)
-      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(-Constants.IntakeConstants.intake_fast_speed)));
+      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(-.675)));
+    m_operatorController.leftBumper()
+      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(.4)));
 
     m_operatorController.rightTrigger().or(m_operatorController.leftTrigger()).or(m_operatorController.rightBumper()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
 
