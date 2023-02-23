@@ -7,10 +7,11 @@ package frc.robot.subsystems;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -39,6 +40,9 @@ public class DriveTrain extends SubsystemBase {
       DriveTrainConstants.TurnPID.kD);
   private PIDController tiltPID = new PIDController(DriveTrainConstants.TiltPID.kP, DriveTrainConstants.TiltPID.kI,
       DriveTrainConstants.TiltPID.kD);
+  
+  //please check navx port
+  private AHRS navx = new AHRS(SerialPort.Port.kMXP);
 
   
 
@@ -51,19 +55,26 @@ public class DriveTrain extends SubsystemBase {
     turnPID.enableContinuousInput(-180, 180);
   }
 
+  private double convertEncoderToMeters(double encoderValue) {
+    return encoderValue * DriveTrainConstants.encoderValueToMeters;
+  }
+
   private double getEncoderValue() {
-    // NOTE: IMPLEMENT THIS
-    return 0;
+    // Get the average value of all encoders
+    double total = 0;
+    total += convertEncoderToMeters(fl_motor.getSelectedSensorPosition());
+    total += convertEncoderToMeters(bl_motor.getSelectedSensorPosition());
+    total -= convertEncoderToMeters(fr_motor.getSelectedSensorPosition());
+    total -= convertEncoderToMeters(br_motor.getSelectedSensorPosition());
+    return total/4;
   }
 
   private double getTurnAngle() {
-    // NOTE: IMPLEMENT THIS
-    return 0;
+    return navx.getAngle();
   }
 
   private double getTiltAngle() {
-    // NOTE: IMPLEMENT THIS
-    return 0;
+    return navx.getYaw();
   }
 
 

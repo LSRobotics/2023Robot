@@ -26,6 +26,12 @@ public final class Constants {
     public static final int bl_motor_id = 3;
   }
   public static class DriveTrainConstants {
+    public static final double gearRatio = 9.64;
+    public static final double wheelDiameter = 6;
+    public static final double encoderCountsPerRevolution = 4096;
+
+    public  static final double encoderValueToMeters = (2 * Math.PI * wheelDiameter / encoderCountsPerRevolution)/gearRatio;
+
     public static class DrivePID {
       public static final double maxSpeed = .5;
       public static final double kP = 0;
