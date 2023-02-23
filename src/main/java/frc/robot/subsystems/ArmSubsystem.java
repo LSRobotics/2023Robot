@@ -16,14 +16,18 @@ public class ArmSubsystem extends SubsystemBase {
             ArmConstants.UpperArm.kP,
             ArmConstants.UpperArm.kI,
             ArmConstants.UpperArm.kD,
-            ArmConstants.UpperArm.speedScalar);
+            ArmConstants.UpperArm.speedScalar,
+            ArmConstants.UpperArm.gearRatio
+            );
 
     private final static ArmComponent lowerArm = new ArmComponent(
             ArmConstants.LowerArm.motor_id,
             ArmConstants.LowerArm.kP,
             ArmConstants.LowerArm.kI,
             ArmConstants.LowerArm.kD,
-            ArmConstants.LowerArm.speedScalar);
+            ArmConstants.LowerArm.speedScalar,
+            ArmConstants.LowerArm.gearRatio
+            );
 
     public ArmSubsystem() {
         super();
@@ -44,11 +48,13 @@ public class ArmSubsystem extends SubsystemBase {
 class ArmComponent extends PIDSubsystem {
     private WPI_TalonSRX motor;
     private double speedScalar;
+    private double gearRatio;
 
-    public ArmComponent(int motor_id, double kP, double kI, double kD, double speedScalar) {
+    public ArmComponent(int motor_id, double kP, double kI, double kD, double speedScalar, double gearRatio) {
         super(new PIDController(kP, kI, kD));
         motor = new WPI_TalonSRX(motor_id);
         this.speedScalar = speedScalar;
+        this.gearRatio = gearRatio;
         // This is usually what we do with angle PIDs, but this might not be necessary
         // since we're not rotating a full 360 degrees
         // pid.enableContinuousInput(ArmConstants.minEncoderAngle,
@@ -67,7 +73,7 @@ class ArmComponent extends PIDSubsystem {
     // in degrees
     public double getMotorAngle() {
         //This should be made positive or negative based on how the motors are mounted
-        return motor.getSelectedSensorPosition() / ArmConstants.encoderUnitsPerRevolution;
+        return ((motor.getSelectedSensorPosition() / gearRatio) / ArmConstants.encoderUnitsPerRevolution) * 360;
     }
 
     @Override
