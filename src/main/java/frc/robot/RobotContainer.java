@@ -13,6 +13,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.VisionSubsystem;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -32,6 +33,9 @@ public class RobotContainer {
   private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
 
+ 
+  private SlewRateLimiter filter = new SlewRateLimiter(1);
+  private SlewRateLimiter filter2 = new SlewRateLimiter(1);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -45,8 +49,10 @@ public class RobotContainer {
     configureBindings();
 
     final DriveTrain.ArcadeDriveCommand drivetrain_command = m_DriveTrain.new ArcadeDriveCommand(
-      () -> (m_driverController.getRightTriggerAxis() - m_driverController.getLeftTriggerAxis()),
-      () -> m_driverController.getLeftX()
+      () -> {
+        return filter.calculate(.7*(m_driverController.getRightTriggerAxis() - m_driverController.getLeftTriggerAxis()));
+      },
+      () -> {return filter2.calculate(.5*m_driverController.getLeftX());}
     ); //technically the second argument can just be passed directly as a lambda (m_dirverController::getRightX), but it is kept as an inline lambda for symmetry
     drivetrain_command.addRequirements(m_DriveTrain);
     //Set the DriveTrain subsystem to automatically call the drive function by default
@@ -77,18 +83,22 @@ public class RobotContainer {
     m_operatorController.rightTrigger() //intake fast
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.intake_fast_speed)));
     m_operatorController.rightBumper() //outtake (shoot object out of intake)
-      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(-Constants.IntakeConstants.intake_fast_speed)));
+      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(-.675)));
+    m_operatorController.leftBumper()
+      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(.4)));
 
-    m_operatorController.rightTrigger().or(m_driverController.leftTrigger()).or(m_operatorController.rightBumper()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
+    m_operatorController.rightTrigger().or(m_operatorController.leftTrigger()).or(m_operatorController.rightBumper()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
 
     m_operatorController.a().onTrue(Commands.runOnce(() -> {
-      m_ArmSubsystem.setArmPIDAngles(90, 90);
+      m_ArmSubsystem.setArmSpeed(.2);
       System.out.println("BAZINGA");
     }));
     m_operatorController.b().onTrue(Commands.runOnce(() -> {
-      m_ArmSubsystem.setArmPIDAngles(0,0);
+      m_ArmSubsystem.setArmSpeed(-.2);
       System.out.println("BAZLOOPER");
     }));
+
+    m_operatorController.a().or(m_operatorController.b()).onFalse(Commands.runOnce(() -> {m_ArmSubsystem.setArmSpeed(0);}));
 
     // m_operatorController.leftTrigger().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(.3), () -> m_IntakeSubsystem.setPower(0.0)));
     // m_operatorController.rightTrigger().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(.5), () -> m_IntakeSubsystem.setPower(0.0)));
