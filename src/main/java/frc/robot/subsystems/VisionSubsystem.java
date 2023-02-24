@@ -8,19 +8,21 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class VisionSubsystem extends SubsystemBase {
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-    NetworkTableEntry tx;
-    NetworkTableEntry ty;
-    NetworkTableEntry ta;
-
+    private double tx, ty, ta;
+    private final NetworkTable m_limelightTable;
+    
+    
     public VisionSubsystem() {
         super();
+        m_limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
     }
+    
+    
     public void periodic() {
         // This method will be called once per scheduler run
-        tx = table.getEntry("tx");
-        ty = table.getEntry("ty");
-        ta = table.getEntry("ta");
+        ty = m_limelightTable.getEntry("ty").getDouble(0);
+        tx = m_limelightTable.getEntry("tx").getDouble(0);
+        ta = m_limelightTable.getEntry("ta").getDouble(0);
         
       }
     public void printValues(){
