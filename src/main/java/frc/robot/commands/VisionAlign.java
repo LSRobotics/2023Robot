@@ -14,8 +14,8 @@ public class VisionAlign extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final VisionSubsystem m_VisionSubsystem; 
   private final DriveTrain m_DriveTrainSubsystem;
-  private boolean visionRight = false;
-  private boolean visionLeft = false;
+  private boolean visionRight;
+  private boolean visionLeft;
 
 
   /**
@@ -57,11 +57,13 @@ public class VisionAlign extends CommandBase {
     
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_DriveTrainSubsystem.arcadeDrive(0,0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return !(visionRight || visionLeft);
   }
 }
