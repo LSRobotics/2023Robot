@@ -19,23 +19,24 @@ public class AutoBalance extends PIDCommand {
       output -> {
         System.out.println(driveTrain.getTiltAngle());
         double speed = MathUtil.clamp(output, -DriveTrainConstants.TiltPID.maxSpeed, DriveTrainConstants.TiltPID.maxSpeed);
-        driveTrain.arcadeDrive(speed, 0);
+        driveTrain.arcadeDrive(-speed, 0);
       },
       driveTrain
       );
-
       this.driveTrain = driveTrain;
-      getController().setTolerance(5);
+      getController().setTolerance(5,7.5);
     }
 
     @Override
-    public boolean isFinished() {
-        return getController().atSetpoint();
+    public void initialize() {
+        super.initialize();
+        driveTrain.setBrake();
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
         driveTrain.arcadeDrive(0,0);
+        driveTrain.setCoast();
     }
   }
