@@ -5,13 +5,17 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AutoBalance;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.VisionAlign;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.VisionSubsystem;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -33,6 +37,8 @@ public class RobotContainer {
   private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
   private final LEDSubsystem m_LedSubsystem = new LEDSubsystem();
 
+  private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
+ 
   private SlewRateLimiter filter = new SlewRateLimiter(1);
   private SlewRateLimiter filter2 = new SlewRateLimiter(1);
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -50,7 +56,6 @@ public class RobotContainer {
 
     final DriveTrain.ArcadeDriveCommand drivetrain_command = m_DriveTrain.new ArcadeDriveCommand(
       () -> {
-        System.out.println("alskjdalksdjasd");
         return filter.calculate(.7*(m_driverController.getRightTriggerAxis() - m_driverController.getLeftTriggerAxis()));
       },
       () -> {return filter2.calculate(.5*m_driverController.getLeftX());}
@@ -61,6 +66,8 @@ public class RobotContainer {
       //Accesses the command class ArcadeDriveCommand from within the instanced DriveTrain class.
       drivetrain_command
     );
+
+
   }
 
   /**
@@ -74,6 +81,13 @@ public class RobotContainer {
    */
   private void configureBindings() {
     
+    m_driverController.a().toggleOnTrue(new AutoBalance(m_DriveTrain));
+    m_driverController.x()
+      .toggleOnTrue(new VisionAlign(m_DriveTrain, m_VisionSubsystem));
+
+
+  
+
     m_operatorController.rightTrigger() //intake slow
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(
         cubeMode ? Constants.IntakeConstants.CubeMode.intake_speed : Constants.IntakeConstants.ConeMode.intake_speed

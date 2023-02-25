@@ -34,9 +34,9 @@ public final class Constants {
 
     public static class DrivePID {
       public static final double maxSpeed = .4;
-      public static final double kP = .05;
+      public static final double kP = 1;
       public static final double kI = 0;
-      public static final double kD = .002;
+      public static final double kD = 0;
     }
     public static class TurnPID {
       public static final double maxSpeed = .5;
@@ -45,10 +45,10 @@ public final class Constants {
       public static final double kD = 0;
     }
     public static class TiltPID {
-      public static final double maxSpeed = .5;
-      public static final double kP = 0;
+      public static final double maxSpeed = .4;
+      public static final double kP = 1.7;
       public static final double kI = 0;
-      public static final double kD = 0;
+      public static final double kD = .8;
     }
   }
   public static class IntakeConstants {

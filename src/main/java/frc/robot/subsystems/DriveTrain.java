@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -40,7 +41,7 @@ public class DriveTrain extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public DriveTrain() {
     super();
-    navx.reset();
+    navx.calibrate();
     right_motors.setInverted(true);
     // set the controller to understand continuous angle input
   }
@@ -59,12 +60,26 @@ public class DriveTrain extends SubsystemBase {
     return (total * DriveTrainConstants.encoderValueToInches)/4;
   }
 
+  public void setBrake() {
+    fr_motor.setNeutralMode(NeutralMode.Brake);
+    fl_motor.setNeutralMode(NeutralMode.Brake);
+    bl_motor.setNeutralMode(NeutralMode.Brake);
+    br_motor.setNeutralMode(NeutralMode.Brake);
+  }
+
+  public void setCoast() {
+    fr_motor.setNeutralMode(NeutralMode.Coast);
+    fl_motor.setNeutralMode(NeutralMode.Coast);
+    bl_motor.setNeutralMode(NeutralMode.Coast);
+    br_motor.setNeutralMode(NeutralMode.Coast);
+  }
+
   public double getTurnAngle() {
     return navx.getAngle();
   }
 
   public double getTiltAngle() {
-    return navx.getYaw();
+    return navx.getRoll();
   }
 
   // This is the command for handling ArcadeDrive logic externally. It is located
