@@ -4,25 +4,9 @@ import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.commands.Autos;
 
-
-
-import java.util.function.DoubleSupplier;
-
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.MotorConstants;
-import frc.robot.Constants.DriveTrainConstants;
+
 
 
 /** An example command that uses an example subsystem. */
@@ -66,9 +50,9 @@ public class VisionAlign extends CommandBase {
       visionLeft = false;
     }
 
-    /*  if(visionRight){
-      drive_controller.arcadeDrive(0,.2);
-     } */
+    if(visionRight){
+      m_DriveTrainSubsystem.ArcadeDriveCommand(.0,.3);
+     } 
   }
     
   // Called once the command ends or is interrupted.
