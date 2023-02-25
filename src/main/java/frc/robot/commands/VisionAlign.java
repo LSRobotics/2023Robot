@@ -39,20 +39,28 @@ public class VisionAlign extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_VisionSubsystem.getTx() >= 5){
+    if(m_VisionSubsystem.getTx() <= -7){
       visionLeft = true;
+      visionRight = false;
     }
-    else if(m_VisionSubsystem.getTx()<= 5){
+    else if(m_VisionSubsystem.getTx()>= 7){
       visionRight = true;
+      visionLeft = false;
     }
     else{
-      visionRight = false;
+      visionRight = true;
       visionLeft = false;
     }
 
+    double speed = 0;
     if(visionRight){
-      m_DriveTrainSubsystem.arcadeDrive(0, .4);
-     } 
+      speed = .3;
+    } 
+    else if (visionLeft) {
+      speed = -.3;
+    }
+    m_DriveTrainSubsystem.arcadeDrive(0, speed);
+
   }
     
   // Called once the command ends or is interrupted.
