@@ -33,13 +33,6 @@ public class DriveTrain extends SubsystemBase {
   private MotorControllerGroup right_motors = new MotorControllerGroup(fr_motor, br_motor);
 
   private DifferentialDrive drive_controller = new DifferentialDrive(right_motors, left_motors);
-
-  private PIDController drivePID = new PIDController(DriveTrainConstants.DrivePID.kP, DriveTrainConstants.DrivePID.kI,
-      DriveTrainConstants.DrivePID.kP);
-  private PIDController turnPID = new PIDController(DriveTrainConstants.TurnPID.kP, DriveTrainConstants.TurnPID.kI,
-      DriveTrainConstants.TurnPID.kD);
-  private PIDController tiltPID = new PIDController(DriveTrainConstants.TiltPID.kP, DriveTrainConstants.TiltPID.kI,
-      DriveTrainConstants.TiltPID.kD);
   
   //please check navx port
   private AHRS navx = new AHRS(SerialPort.Port.kMXP);
@@ -47,69 +40,31 @@ public class DriveTrain extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public DriveTrain() {
     super();
-
+    navx.reset();
     right_motors.setInverted(true);
     // set the controller to understand continuous angle input
-    turnPID.enableContinuousInput(-180, 180);
   }
 
-  private double convertEncoderToMeters(double encoderValue) {
-    return encoderValue * DriveTrainConstants.encoderValueToMeters;
+  public void arcadeDrive(double speed, double rotation) {
+    drive_controller.arcadeDrive(speed, rotation);
   }
 
-  private double getEncoderValue() {
+  public double getEncoderValue() {
     // Get the average value of all encoders
     double total = 0;
-    total += convertEncoderToMeters(fl_motor.getSelectedSensorPosition());
-    total += convertEncoderToMeters(bl_motor.getSelectedSensorPosition());
-    total -= convertEncoderToMeters(fr_motor.getSelectedSensorPosition());
-    total -= convertEncoderToMeters(br_motor.getSelectedSensorPosition());
-    return total/4;
+    total += fl_motor.getSelectedSensorPosition();
+    total += bl_motor.getSelectedSensorPosition();
+    total -= fr_motor.getSelectedSensorPosition();
+    total -= br_motor.getSelectedSensorPosition();
+    return (total * DriveTrainConstants.encoderValueToInches)/4;
   }
 
-  private double getTurnAngle() {
+  public double getTurnAngle() {
     return navx.getAngle();
   }
 
-  private double getTiltAngle() {
+  public double getTiltAngle() {
     return navx.getYaw();
-  }
-
-
-  public class pidDrive extends PIDCommand {
-    public pidDrive(double distance) {
-      super(drivePID, 
-      () -> {return getEncoderValue();},
-      distance, 
-      (double output) -> {
-        double speed = MathUtil.clamp(output, -DriveTrainConstants.DrivePID.maxSpeed, DriveTrainConstants.DrivePID.maxSpeed);
-        drive_controller.arcadeDrive(speed, 0);
-      });
-    }
-  }
-
-  public class pidTurn extends PIDCommand {
-    public pidTurn(double angle) {
-      super(turnPID, 
-      () -> {return getTurnAngle();},
-      angle,
-      (double output) -> {
-        double turnSpeed = MathUtil.clamp(output, -DriveTrainConstants.TurnPID.maxSpeed, DriveTrainConstants.TurnPID.maxSpeed);
-        drive_controller.arcadeDrive(0, turnSpeed);
-      });
-    }
-  }
-
-  public class autoBalance extends PIDCommand {
-    public autoBalance() {
-      super(tiltPID,
-      () -> {return getTiltAngle();},
-      0,
-      (double output) -> {
-        double speed = MathUtil.clamp(output, -DriveTrainConstants.TiltPID.maxSpeed, DriveTrainConstants.TiltPID.maxSpeed);
-        drive_controller.arcadeDrive(speed, 0);
-      });
-    }
   }
 
   // This is the command for handling ArcadeDrive logic externally. It is located

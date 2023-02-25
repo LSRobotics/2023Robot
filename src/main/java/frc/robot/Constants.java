@@ -30,13 +30,13 @@ public final class Constants {
     public static final double wheelDiameter = 6;
     public static final double encoderCountsPerRevolution = 4096;
 
-    public  static final double encoderValueToMeters = (2 * Math.PI * wheelDiameter / encoderCountsPerRevolution)/gearRatio;
+    public  static final double encoderValueToInches = (2 * Math.PI * wheelDiameter / encoderCountsPerRevolution)/gearRatio;
 
     public static class DrivePID {
-      public static final double maxSpeed = .5;
-      public static final double kP = 0;
+      public static final double maxSpeed = .4;
+      public static final double kP = .05;
       public static final double kI = 0;
-      public static final double kD = 0;
+      public static final double kD = .002;
     }
     public static class TurnPID {
       public static final double maxSpeed = .5;
@@ -58,6 +58,9 @@ public final class Constants {
     public static final double intake_motor_speed = .5;
     public static final double intake_fast_speed = .75;
     public static final double intake_slow_speed = 0.25;
+
+    public static final double shoot_fast_speed = -0.53;
+    public static final double shoot_medium_speed = -0.25;
   }
   public static class ArmConstants {
 

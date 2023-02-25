@@ -50,6 +50,7 @@ public class RobotContainer {
 
     final DriveTrain.ArcadeDriveCommand drivetrain_command = m_DriveTrain.new ArcadeDriveCommand(
       () -> {
+        System.out.println("alskjdalksdjasd");
         return filter.calculate(.7*(m_driverController.getRightTriggerAxis() - m_driverController.getLeftTriggerAxis()));
       },
       () -> {return filter2.calculate(.5*m_driverController.getLeftX());}
@@ -78,29 +79,36 @@ public class RobotContainer {
     m_driverController.a()
       .onTrue(Commands.runOnce(() -> m_VisionSubsystem.printValues()));
     
-    m_operatorController.leftTrigger() //intake slow
+    m_operatorController.rightTrigger() //intake slow
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.intake_slow_speed)));
-    m_operatorController.rightTrigger() //intake fast
+    m_operatorController.leftTrigger() //intake fast
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.intake_fast_speed)));
-    m_operatorController.rightBumper() //outtake (shoot object out of intake)
-      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(-.7)));
-    m_operatorController.leftBumper()
-      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(.4)));
+    m_operatorController.y() //outtake fast(shoot object out of intake)
+      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.shoot_fast_speed)));
+    m_operatorController.b() //outtake medium 
+      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.shoot_medium_speed)));
 
-    m_operatorController.rightTrigger().or(m_operatorController.leftTrigger()).or(m_operatorController.rightBumper()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
+    m_operatorController.rightTrigger()
+    .or(m_operatorController.leftTrigger())
+    .or(m_operatorController.rightBumper())
+    .or(m_operatorController.y())
+    .or(m_operatorController.b()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
 
-    m_operatorController.a().onTrue(Commands.runOnce(() -> {
+    
+    m_operatorController.povUp().onTrue(Commands.runOnce(() -> {
       m_ArmSubsystem.setArmSpeed(.2);
       System.out.println("BAZINGA");
     }));
-    m_operatorController.b().onTrue(Commands.runOnce(() -> {
+    m_operatorController.povDown().onTrue(Commands.runOnce(() -> {
       m_ArmSubsystem.setArmSpeed(-.2);
       System.out.println("BAZLOOPER");
     }));
 
+    m_operatorController.povUp().or(m_operatorController.povDown()).onFalse(Commands.runOnce(() -> {m_ArmSubsystem.setArmSpeed(0);}));
 
-    m_operatorController.a().or(m_operatorController.b()).onFalse(Commands.runOnce(() -> {m_ArmSubsystem.setArmSpeed(0);}));
+    m_operatorController.y().whileTrue(Commands.run(() -> {System.out.println(m_DriveTrain.getEncoderValue());}));
 
+    m_operatorController.x().whileTrue(Commands.run(()-> {System.out.println(m_DriveTrain.getTurnAngle());}));
     // m_operatorController.leftTrigger().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(.3), () -> m_IntakeSubsystem.setPower(0.0)));
     // m_operatorController.rightTrigger().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(.5), () -> m_IntakeSubsystem.setPower(0.0)));
     // m_operatorController.rightBumper().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(-.5), () -> m_IntakeSubsystem.setPower(0.0)));
@@ -119,6 +127,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return Autos.testAuto(m_DriveTrain);
   }
 }
