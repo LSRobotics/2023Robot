@@ -44,8 +44,6 @@ public class DriveTrain extends SubsystemBase {
   //please check navx port
   private AHRS navx = new AHRS(SerialPort.Port.kMXP);
 
-  
-
   /** Creates a new ExampleSubsystem. */
   public DriveTrain() {
     super();

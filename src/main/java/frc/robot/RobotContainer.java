@@ -83,7 +83,7 @@ public class RobotContainer {
     m_operatorController.rightTrigger() //intake fast
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.intake_fast_speed)));
     m_operatorController.rightBumper() //outtake (shoot object out of intake)
-      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(-.675)));
+      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(-.7)));
     m_operatorController.leftBumper()
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(.4)));
 
@@ -97,6 +97,7 @@ public class RobotContainer {
       m_ArmSubsystem.setArmSpeed(-.2);
       System.out.println("BAZLOOPER");
     }));
+
 
     m_operatorController.a().or(m_operatorController.b()).onFalse(Commands.runOnce(() -> {m_ArmSubsystem.setArmSpeed(0);}));
 
