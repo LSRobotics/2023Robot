@@ -8,25 +8,33 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
 
 
 public class AutoBalance extends PIDCommand {
-    private static PIDController tiltPID = new PIDController(DriveTrainConstants.TiltPID.kP, DriveTrainConstants.TiltPID.kI,
-    DriveTrainConstants.TiltPID.kD);
 
     private DriveTrain driveTrain;
 
     public AutoBalance(DriveTrain driveTrain) {
-      super(tiltPID,
-      () -> {return driveTrain.getTiltAngle();},
+      super(new PIDController(DriveTrainConstants.TiltPID.kP, DriveTrainConstants.TiltPID.kI,
+      DriveTrainConstants.TiltPID.kD),
+      driveTrain::getTiltAngle,
       0,
-      (double output) -> {
+      output -> {
+        System.out.println(driveTrain.getTiltAngle());
         double speed = MathUtil.clamp(output, -DriveTrainConstants.TiltPID.maxSpeed, DriveTrainConstants.TiltPID.maxSpeed);
         driveTrain.arcadeDrive(speed, 0);
-      });
+      },
+      driveTrain
+      );
 
       this.driveTrain = driveTrain;
+      getController().setTolerance(5);
     }
+
+    @Override
+    public boolean isFinished() {
+        return getController().atSetpoint();
+    }
+
     @Override
     public void end(boolean interrupted) {
-        // TODO Auto-generated method stub
         super.end(interrupted);
         driveTrain.arcadeDrive(0,0);
     }

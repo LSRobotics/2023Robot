@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AutoBalance;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -70,6 +71,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
     
+    m_driverController.a().toggleOnTrue(new AutoBalance(m_DriveTrain));
+
     m_operatorController.rightTrigger() //intake slow
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.intake_slow_speed)));
     m_operatorController.leftTrigger() //intake fast

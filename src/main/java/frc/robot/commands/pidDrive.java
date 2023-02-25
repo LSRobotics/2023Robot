@@ -11,16 +11,16 @@ public class pidDrive extends PIDCommand {
     DriveTrainConstants.DrivePID.kP);
     private DriveTrain driveTrain;
 
-    public pidDrive(double distance, DriveTrain driveTrain) {
+    public pidDrive(double inches, DriveTrain driveTrain) {
         super(drivePID, 
         driveTrain::getEncoderValue,
-        (driveTrain.getEncoderValue() + distance), 
+        (driveTrain.getEncoderValue() + inches), 
         (double output) -> {
         double speed = MathUtil.clamp(output, -DriveTrainConstants.DrivePID.maxSpeed, DriveTrainConstants.DrivePID.maxSpeed);
-        System.out.print("distance:");
-        System.out.println(driveTrain.getEncoderValue());
-        System.out.print("speed:");
-        System.out.println(speed);
+        // System.out.print("inches:");
+        // System.out.println(driveTrain.getEncoderValue());
+        // System.out.print("speed:");
+        // System.out.println(speed);
         driveTrain.arcadeDrive(speed, 0);
         },
         driveTrain);
