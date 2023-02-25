@@ -51,7 +51,7 @@ public class VisionAlign extends CommandBase {
     }
 
     if(visionRight){
-      m_DriveTrainSubsystem.ArcadeDriveCommand(.0,.3);
+      m_DriveTrainSubsystem.arcadeDrive(0, .4);
      } 
   }
     
