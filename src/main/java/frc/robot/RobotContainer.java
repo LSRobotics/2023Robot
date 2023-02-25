@@ -8,15 +8,19 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.VisionAlign;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.VisionSubsystem;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -30,6 +34,7 @@ public class RobotContainer {
   private final DriveTrain m_DriveTrain = new DriveTrain();
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
   private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
+  private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
  
   private SlewRateLimiter filter = new SlewRateLimiter(1);
   private SlewRateLimiter filter2 = new SlewRateLimiter(1);
@@ -47,7 +52,6 @@ public class RobotContainer {
 
     final DriveTrain.ArcadeDriveCommand drivetrain_command = m_DriveTrain.new ArcadeDriveCommand(
       () -> {
-        System.out.println("alskjdalksdjasd");
         return filter.calculate(.7*(m_driverController.getRightTriggerAxis() - m_driverController.getLeftTriggerAxis()));
       },
       () -> {return filter2.calculate(.5*m_driverController.getLeftX());}
@@ -58,6 +62,8 @@ public class RobotContainer {
       //Accesses the command class ArcadeDriveCommand from within the instanced DriveTrain class.
       drivetrain_command
     );
+
+
   }
 
   /**
@@ -72,6 +78,11 @@ public class RobotContainer {
   private void configureBindings() {
     
     m_driverController.a().toggleOnTrue(new AutoBalance(m_DriveTrain));
+    m_driverController.x()
+      .toggleOnTrue(new VisionAlign(m_DriveTrain, m_VisionSubsystem));
+
+
+  
 
     m_operatorController.rightTrigger() //intake slow
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.intake_slow_speed)));
