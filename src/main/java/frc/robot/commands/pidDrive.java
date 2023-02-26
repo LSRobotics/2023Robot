@@ -17,14 +17,14 @@ public class pidDrive extends PIDCommand {
         (driveTrain.getEncoderValue() + inches), 
         (double output) -> {
         double speed = MathUtil.clamp(output, -DriveTrainConstants.DrivePID.maxSpeed, DriveTrainConstants.DrivePID.maxSpeed);
-        // System.out.print("inches:");
-        // System.out.println(driveTrain.getEncoderValue());
+        System.out.println(driveTrain.getEncoderValue());
         // System.out.print("speed:");
         // System.out.println(speed);
         driveTrain.arcadeDrive(speed, 0);
         },
         driveTrain);
         this.driveTrain = driveTrain;
+        getController().setTolerance(8);
     }
     @Override
     public void end(boolean interrupted) {

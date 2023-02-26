@@ -12,6 +12,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -42,6 +43,7 @@ public class DriveTrain extends SubsystemBase {
   public DriveTrain() {
     super();
     navx.calibrate();
+    fl_motor.setSelectedSensorPosition(0);
     right_motors.setInverted(true);
     // set the controller to understand continuous angle input
   }
@@ -54,10 +56,10 @@ public class DriveTrain extends SubsystemBase {
     // Get the average value of all encoders
     double total = 0;
     total += fl_motor.getSelectedSensorPosition();
-    total += bl_motor.getSelectedSensorPosition();
-    total -= fr_motor.getSelectedSensorPosition();
-    total -= br_motor.getSelectedSensorPosition();
-    return (total * DriveTrainConstants.encoderValueToInches)/4;
+    //total += bl_motor.getSelectedSensorPosition();
+    //total -= fr_motor.getSelectedSensorPosition();
+    //total -= br_motor.getSelectedSensorPosition();
+    return (total * DriveTrainConstants.encoderValueToInches);
   }
 
   public void setBrake() {
