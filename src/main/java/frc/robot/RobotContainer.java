@@ -11,6 +11,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.VisionAlign;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.VisionSubsystem;
@@ -34,6 +35,8 @@ public class RobotContainer {
   private final DriveTrain m_DriveTrain = new DriveTrain();
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
   private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
+  private final LEDSubsystem m_LedSubsystem = new LEDSubsystem();
+
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
  
   private SlewRateLimiter filter = new SlewRateLimiter(3);
@@ -45,6 +48,7 @@ public class RobotContainer {
   private final CommandXboxController m_operatorController = 
       new CommandXboxController(1);
 
+  private boolean cubeMode = false;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -85,17 +89,22 @@ public class RobotContainer {
   
 
     m_operatorController.rightTrigger() //intake slow
-      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.intake_slow_speed)));
-    m_operatorController.leftTrigger() //intake fast
-      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.intake_fast_speed)));
-    m_operatorController.y() //outtake fast(shoot object out of intake)
-      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.shoot_fast_speed)));
-    m_operatorController.b() //outtake medium 
-      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(Constants.IntakeConstants.shoot_medium_speed)));
+      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(
+        cubeMode ? Constants.IntakeConstants.CubeMode.intake_speed : Constants.IntakeConstants.ConeMode.intake_speed
+      )
+    ));
+    m_operatorController.y() //outtake slow
+      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(
+        cubeMode ? Constants.IntakeConstants.CubeMode.slow_outtake_speed : Constants.IntakeConstants.ConeMode.slow_outtake_speed
+      )
+    ));
+    m_operatorController.b() //outtake fast
+      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(
+        cubeMode ? Constants.IntakeConstants.CubeMode.fast_outtake_speed : Constants.IntakeConstants.ConeMode.fast_outtake_speed
+      )
+    ));
 
     m_operatorController.rightTrigger()
-    .or(m_operatorController.leftTrigger())
-    .or(m_operatorController.rightBumper())
     .or(m_operatorController.y())
     .or(m_operatorController.b()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
 
@@ -113,7 +122,13 @@ public class RobotContainer {
 
     m_operatorController.y().whileTrue(Commands.run(() -> {System.out.println(m_DriveTrain.getEncoderValue());}));
 
-    m_operatorController.x().whileTrue(Commands.run(()-> {System.out.println(m_DriveTrain.getTurnAngle());}));
+    m_operatorController.x().whileTrue(Commands.run(() -> {System.out.println(m_DriveTrain.getTurnAngle());}));
+
+    m_operatorController.a().onTrue(Commands.runOnce(() -> 
+    {
+      cubeMode = !cubeMode;
+      m_LedSubsystem.setMode(cubeMode);
+    }));
     // m_operatorController.leftTrigger().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(.3), () -> m_IntakeSubsystem.setPower(0.0)));
     // m_operatorController.rightTrigger().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(.5), () -> m_IntakeSubsystem.setPower(0.0)));
     // m_operatorController.rightBumper().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(-.5), () -> m_IntakeSubsystem.setPower(0.0)));
