@@ -117,6 +117,14 @@ public class RobotContainer {
       m_ArmSubsystem.setArmSpeed(-.4);
       System.out.println("BAZLOOPER");
     }));
+    m_operatorController.povLeft().onTrue(Commands.runOnce(() -> {
+      m_ArmSubsystem.setArmSpeed(-.2);
+      System.out.println("BAZOOKA");
+    }));
+    m_operatorController.povRight().onTrue(Commands.runOnce(() -> {
+      m_ArmSubsystem.setArmSpeed(.2);
+      System.out.println("BAZAMA");
+    }));
 
     m_driverController.leftBumper().onTrue(Commands.runOnce(() -> {
       m_ArmSubsystem.setArmSpeed(.2);
@@ -131,6 +139,7 @@ public class RobotContainer {
 
 
     m_operatorController.povUp().or(m_operatorController.povDown()).onFalse(Commands.runOnce(() -> {m_ArmSubsystem.setArmSpeed(0);}));
+    m_operatorController.povRight().or(m_operatorController.povLeft()).onFalse(Commands.runOnce(() -> {m_ArmSubsystem.setArmSpeed(0);}));
 
     m_operatorController.y().whileTrue(Commands.run(() -> {System.out.println(m_DriveTrain.getEncoderValue());}));
 
