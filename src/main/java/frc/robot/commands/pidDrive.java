@@ -7,12 +7,11 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 
 public class pidDrive extends PIDCommand {
-    private static PIDController drivePID = new PIDController(DriveTrainConstants.DrivePID.kP, DriveTrainConstants.DrivePID.kI,
-    DriveTrainConstants.DrivePID.kP);
     private DriveTrain driveTrain;
 
     public pidDrive(double inches, DriveTrain driveTrain) {
-        super(drivePID, 
+        super(new PIDController(DriveTrainConstants.DrivePID.kP, DriveTrainConstants.DrivePID.kI,
+        DriveTrainConstants.DrivePID.kP), 
         driveTrain::getEncoderValue,
         (driveTrain.getEncoderValue() + inches), 
         (double output) -> {
