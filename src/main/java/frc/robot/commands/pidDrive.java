@@ -26,6 +26,12 @@ public class pidDrive extends PIDCommand {
         this.driveTrain = driveTrain;
         getController().setTolerance(8);
     }
+
+    @Override
+    public boolean isFinished() {
+        return getController().atSetpoint();
+    }
+
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);

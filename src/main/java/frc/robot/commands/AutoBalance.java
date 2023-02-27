@@ -28,6 +28,11 @@ public class AutoBalance extends PIDCommand {
     }
 
     @Override
+    public boolean isFinished() {
+        return getController().atSetpoint();
+    }
+
+    @Override
     public void initialize() {
         super.initialize();
         driveTrain.setBrake();
