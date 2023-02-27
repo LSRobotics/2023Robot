@@ -39,8 +39,8 @@ public class RobotContainer {
 
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
  
-  private SlewRateLimiter filter = new SlewRateLimiter(3);
-  private SlewRateLimiter filter2 = new SlewRateLimiter(3);
+  private SlewRateLimiter filter = new SlewRateLimiter(1);
+  private SlewRateLimiter filter2 = new SlewRateLimiter(1);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -110,13 +110,25 @@ public class RobotContainer {
 
     
     m_operatorController.povUp().onTrue(Commands.runOnce(() -> {
-      m_ArmSubsystem.setArmSpeed(.2);
+      m_ArmSubsystem.setArmSpeed(.4);
       System.out.println("BAZINGA");
     }));
     m_operatorController.povDown().onTrue(Commands.runOnce(() -> {
-      m_ArmSubsystem.setArmSpeed(-.2);
+      m_ArmSubsystem.setArmSpeed(-.4);
       System.out.println("BAZLOOPER");
     }));
+
+    m_driverController.leftBumper().onTrue(Commands.runOnce(() -> {
+      m_ArmSubsystem.setArmSpeed(.2);
+      System.out.println("BAZINGA");
+    }));
+
+    m_driverController.rightBumper().onTrue(Commands.runOnce(() -> {
+      m_ArmSubsystem.setArmSpeed(-.2);
+      System.out.println("BAZINGA");
+    }));
+
+
 
     m_operatorController.povUp().or(m_operatorController.povDown()).onFalse(Commands.runOnce(() -> {m_ArmSubsystem.setArmSpeed(0);}));
 

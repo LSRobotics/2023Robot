@@ -34,8 +34,8 @@ public final class Constants {
 
     public static class DrivePID {
       public static final double maxSpeed = .4;
-      public static final double kP = .4;
-      public static final double kI = 0;
+      public static final double kP = 6;
+      public static final double kI = .4;
       public static final double kD = 0;
     }
     public static class TurnPID {
