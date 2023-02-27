@@ -8,6 +8,7 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.commands.AutoBalance;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
@@ -15,11 +16,10 @@ public final class Autos {
     return Commands.sequence(subsystem.exampleMethodCommand(), new ExampleCommand(subsystem));
   }
 
-  private static CommandBase testAuto(DriveTrain driveTrain) {
+  public final static CommandBase testAuto(DriveTrain driveTrain) {
     return Commands.sequence(
-      driveTrain.new pidDrive(1),
-      driveTrain.new pidTurn(90),
-      driveTrain.new pidDrive(2)
+      new pidDrive(50, driveTrain)
+      //new AutoBalance(driveTrain)
     );
   }
 

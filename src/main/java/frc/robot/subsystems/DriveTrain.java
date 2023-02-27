@@ -6,16 +6,23 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.DriveTrainConstants;
+
+
 
 public class DriveTrain extends SubsystemBase {
 
@@ -28,82 +35,53 @@ public class DriveTrain extends SubsystemBase {
   private MotorControllerGroup right_motors = new MotorControllerGroup(fr_motor, br_motor);
 
   private DifferentialDrive drive_controller = new DifferentialDrive(right_motors, left_motors);
-
-  private PIDController drivePID = new PIDController(DriveTrainConstants.DrivePID.kP, DriveTrainConstants.DrivePID.kI,
-      DriveTrainConstants.DrivePID.kP);
-  private PIDController turnPID = new PIDController(DriveTrainConstants.TurnPID.kP, DriveTrainConstants.TurnPID.kI,
-      DriveTrainConstants.TurnPID.kD);
+  
+  //please check navx port
+  private AHRS navx = new AHRS(SerialPort.Port.kMXP);
 
   /** Creates a new ExampleSubsystem. */
   public DriveTrain() {
     super();
-
+    navx.calibrate();
+    fl_motor.setSelectedSensorPosition(0);
     right_motors.setInverted(true);
     // set the controller to understand continuous angle input
-    turnPID.enableContinuousInput(-180, 180);
   }
 
-  private double getEncoderValue() {
-    // NOTE: IMPLEMENT THIS
-    return 0;
+  public void arcadeDrive(double speed, double rotation) {
+    drive_controller.arcadeDrive(speed, rotation);
   }
 
-  private double getEncoderAngle() {
-    // NOTE: IMPLEMENT THIS
-    return 0;
+  public double getEncoderValue() {
+    // Get the average value of all encoders
+    double total = 0;
+    total += fl_motor.getSelectedSensorPosition();
+    //total += bl_motor.getSelectedSensorPosition();
+    //total -= fr_motor.getSelectedSensorPosition();
+    //total -= br_motor.getSelectedSensorPosition();
+    return (total * DriveTrainConstants.encoderValueToInches);
   }
 
-  public class pidDrive extends CommandBase {
-
-    public pidDrive(double distance) {
-      // NOTE: ACTUALLY CALCULATE DISTANCE
-      drivePID.reset();
-      drivePID.setSetpoint(distance);
-    }
-
-    @Override
-    public void execute() {
-      double speed = MathUtil.clamp(drivePID.calculate(getEncoderValue()), -DriveTrainConstants.DrivePID.maxSpeed,
-          DriveTrainConstants.DrivePID.maxSpeed);
-      drive_controller.arcadeDrive(speed, 0);
-    }
-
-    @Override
-    public boolean isFinished() {
-      return drivePID.atSetpoint();
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-      drive_controller.arcadeDrive(0, 0);
-      drivePID.reset();
-    }
+  public void setBrake() {
+    fr_motor.setNeutralMode(NeutralMode.Brake);
+    fl_motor.setNeutralMode(NeutralMode.Brake);
+    bl_motor.setNeutralMode(NeutralMode.Brake);
+    br_motor.setNeutralMode(NeutralMode.Brake);
   }
 
-  public class pidTurn extends CommandBase {
-    public pidTurn(double angle) {
-      // NOTE: ACTUALLY CALCULATE DISTANCE
-      turnPID.reset();
-      turnPID.setSetpoint(angle);
-    }
+  public void setCoast() {
+    fr_motor.setNeutralMode(NeutralMode.Coast);
+    fl_motor.setNeutralMode(NeutralMode.Coast);
+    bl_motor.setNeutralMode(NeutralMode.Coast);
+    br_motor.setNeutralMode(NeutralMode.Coast);
+  }
 
-    @Override
-    public void execute() {
-      double speed = MathUtil.clamp(turnPID.calculate(getEncoderAngle()), -DriveTrainConstants.TurnPID.maxSpeed,
-          DriveTrainConstants.TurnPID.maxSpeed);
-      drive_controller.arcadeDrive(0, speed);
-    }
+  public double getTurnAngle() {
+    return navx.getAngle();
+  }
 
-    @Override
-    public boolean isFinished() {
-      return turnPID.atSetpoint();
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-      drive_controller.arcadeDrive(0, 0);
-      turnPID.reset();
-    }
+  public double getTiltAngle() {
+    return navx.getRoll();
   }
 
   // This is the command for handling ArcadeDrive logic externally. It is located
@@ -129,7 +107,7 @@ public class DriveTrain extends SubsystemBase {
       // another subsystem or something), this will no longer be able to directly
       // access the drive (you just need to pass the subsystem and write an accessor
       // method then)
-      drive_controller.arcadeDrive(driveSpeed.getAsDouble() * .7, turnSpeed.getAsDouble() * .5);
+      drive_controller.arcadeDrive(driveSpeed.getAsDouble(), turnSpeed.getAsDouble());
     }
 
     // Called once after isFinished returns true
@@ -138,5 +116,6 @@ public class DriveTrain extends SubsystemBase {
       drive_controller.arcadeDrive(0, 0);
     }
   }
+  
 
 }
