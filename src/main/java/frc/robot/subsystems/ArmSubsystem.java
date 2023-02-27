@@ -13,10 +13,8 @@ public class ArmSubsystem extends SubsystemBase {
         super();
         arm.set(0);
     }
-
+    
     public void setArmSpeed(double armSpeed) {
-        System.out.println("ahhhhh");
         arm.set(armSpeed);
     }
-
 }

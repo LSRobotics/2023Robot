@@ -107,7 +107,6 @@ public class RobotContainer {
     m_operatorController.rightTrigger()
     .or(m_operatorController.y())
     .or(m_operatorController.b()).onFalse(Commands.runOnce(() -> m_IntakeSubsystem.setPower(0.0)));
-
     
     m_operatorController.povUp().onTrue(Commands.runOnce(() -> {
       m_ArmSubsystem.setArmSpeed(.4);
