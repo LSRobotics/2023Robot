@@ -11,23 +11,22 @@ public class pidDrive extends PIDCommand {
 
     public pidDrive(double inches, DriveTrain driveTrain) {
         super(new PIDController(DriveTrainConstants.DrivePID.kP, DriveTrainConstants.DrivePID.kI,
-        DriveTrainConstants.DrivePID.kP), 
+        DriveTrainConstants.DrivePID.kD), 
         driveTrain::getEncoderValue,
-        (driveTrain.getEncoderValue() + inches), 
+        (driveTrain.getEncoderValue() + inches),
         (double output) -> {
         double speed = MathUtil.clamp(output, -DriveTrainConstants.DrivePID.maxSpeed, DriveTrainConstants.DrivePID.maxSpeed);
-        System.out.println(driveTrain.getEncoderValue());
-        // System.out.print("speed:");
-        // System.out.println(speed);
         driveTrain.arcadeDrive(speed, 0);
         },
         driveTrain);
         this.driveTrain = driveTrain;
-        getController().setTolerance(8);
+        driveTrain.setBrake();
+        getController().setTolerance(1, .3);
     }
 
     @Override
     public boolean isFinished() {
+        super.isFinished();
         return getController().atSetpoint();
     }
 
@@ -35,5 +34,6 @@ public class pidDrive extends PIDCommand {
     public void end(boolean interrupted) {
         super.end(interrupted);
         driveTrain.arcadeDrive(0,0);
+        driveTrain.setCoast();
     }
 }

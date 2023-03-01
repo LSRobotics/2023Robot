@@ -17,7 +17,6 @@ public class AutoBalance extends PIDCommand {
       driveTrain::getTiltAngle,
       0,
       output -> {
-        System.out.println(driveTrain.getTiltAngle());
         double speed = MathUtil.clamp(output, -DriveTrainConstants.TiltPID.maxSpeed, DriveTrainConstants.TiltPID.maxSpeed);
         driveTrain.arcadeDrive(-speed, 0);
       },
