@@ -35,9 +35,9 @@ public final class Constants {
 
     public static class DrivePID {
       public static final double maxSpeed = .4;
-      public static final double kP = 2;
+      public static final double kP = .05;
       public static final double kI = 0;
-      public static final double kD = 0;
+      public static final double kD = .001;
     }
 
     public static class TurnPID {
@@ -57,23 +57,16 @@ public final class Constants {
   public static class IntakeConstants {
     public static final int motor_id = 15;
 
-    public static final double intake_motor_speed = .5;
-    public static final double intake_fast_speed = .75;
-    public static final double intake_slow_speed = 0.25;
-
-    public static final double shoot_fast_speed = -0.7;
-    public static final double shoot_medium_speed = -0.25;
-
     public static class CubeMode{
       public static final double fast_outtake_speed = -0.53;
       public static final double slow_outtake_speed = -0.25;
-      public static final double intake_speed = 0.75;
+      public static final double intake_speed = 0.25;
     }
 
     public static class ConeMode{
       public final static double fast_outtake_speed = -0.53;
       public final static double slow_outtake_speed = -0.25;
-      public final static double intake_speed = 0.25;
+      public final static double intake_speed = 0.75;
     }
   }
   public static class ArmConstants {
@@ -83,7 +76,7 @@ public final class Constants {
   }
 
   public static class LEDConstants {
-    public static final int ledControllerID = 0;
+    public static final int ledControllerID = 9;
 
     public static final double cubeColour = 0.91;
 
