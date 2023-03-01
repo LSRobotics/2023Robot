@@ -39,8 +39,8 @@ public class RobotContainer {
 
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
  
-  private SlewRateLimiter filter = new SlewRateLimiter(1);
-  private SlewRateLimiter filter2 = new SlewRateLimiter(1);
+  private SlewRateLimiter filter = new SlewRateLimiter(2.8);
+  private SlewRateLimiter filter2 = new SlewRateLimiter(2.8);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -85,14 +85,10 @@ public class RobotContainer {
     m_driverController.x()
       .toggleOnTrue(new VisionAlign(m_DriveTrain, m_VisionSubsystem));
 
-
-  
-
-    m_operatorController.rightTrigger() //intake slow
-      .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(
-        cubeMode ? Constants.IntakeConstants.CubeMode.intake_speed : Constants.IntakeConstants.ConeMode.intake_speed
+    m_operatorController.rightTrigger().onTrue(Commands.runOnce(() -> 
+        m_IntakeSubsystem.setPower(cubeMode ? Constants.IntakeConstants.CubeMode.intake_speed : Constants.IntakeConstants.ConeMode.intake_speed)
       )
-    ));
+    );
     m_operatorController.y() //outtake slow
       .onTrue(Commands.runOnce(() -> m_IntakeSubsystem.setPower(
         cubeMode ? Constants.IntakeConstants.CubeMode.slow_outtake_speed : Constants.IntakeConstants.ConeMode.slow_outtake_speed
@@ -125,37 +121,14 @@ public class RobotContainer {
       System.out.println("BAZAMA");
     }));
 
-    m_driverController.leftBumper().onTrue(Commands.runOnce(() -> {
-      m_ArmSubsystem.setArmSpeed(.2);
-      System.out.println("BAZINGA");
-    }));
-
-    m_driverController.rightBumper().onTrue(Commands.runOnce(() -> {
-      m_ArmSubsystem.setArmSpeed(-.2);
-      System.out.println("BAZINGA");
-    }));
-
-
-
     m_operatorController.povUp().or(m_operatorController.povDown()).onFalse(Commands.runOnce(() -> {m_ArmSubsystem.setArmSpeed(0);}));
     m_operatorController.povRight().or(m_operatorController.povLeft()).onFalse(Commands.runOnce(() -> {m_ArmSubsystem.setArmSpeed(0);}));
-
-    m_operatorController.y().whileTrue(Commands.run(() -> {System.out.println(m_DriveTrain.getEncoderValue());}));
-
-    m_operatorController.x().whileTrue(Commands.run(() -> {System.out.println(m_DriveTrain.getTurnAngle());}));
 
     m_operatorController.a().onTrue(Commands.runOnce(() -> 
     {
       cubeMode = !cubeMode;
       m_LedSubsystem.setMode(cubeMode);
     }));
-    // m_operatorController.leftTrigger().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(.3), () -> m_IntakeSubsystem.setPower(0.0)));
-    // m_operatorController.rightTrigger().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(.5), () -> m_IntakeSubsystem.setPower(0.0)));
-    // m_operatorController.rightBumper().whileTrue(Commands.startEnd( () -> m_IntakeSubsystem.setPower(-.5), () -> m_IntakeSubsystem.setPower(0.0)));
-
-    //m_operatorController.leftBumper().whileTrue(Commands.startEnd( () -> m_ArmSubsystem.setArmSpeed(0.2,0.2), () -> m_ArmSubsystem.setArmSpeed(0.0, 0.0)));
-    //m_operatorController.leftBumper().whileTrue(Commands.startEnd( () -> m_ArmSubsystem.setArmPIDAngles(90,90), () -> m_ArmSubsystem.setArmPIDAngles(0.0, 0.0)));
-
   }
 
 
