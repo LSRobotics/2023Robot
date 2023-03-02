@@ -13,7 +13,76 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
+  }
+
+  public static class MotorConstants {
+    public static final int fr_motor_id = 5;
+    public static final int fl_motor_id = 4;
+    public static final int br_motor_id = 2;
+    public static final int bl_motor_id = 3;
+  }
+
+  public static class DriveTrainConstants {
+    public static final double gearRatio = 9.64;
+    public static final double wheelDiameter = 6;
+    public static final double encoderCountsPerRevolution = 4096;
+
+    public  static final double encoderValueToInches = (2 * Math.PI * wheelDiameter / encoderCountsPerRevolution)/gearRatio;
+
+    public static class DrivePID {
+      public static final double maxSpeed = .6;
+      public static final double kP = .05;
+      public static final double kI = 0;
+      public static final double kD = .001;
+    }
+
+    public static class TurnPID {
+      public static final double maxSpeed = .5;
+      public static final double kP = 0;
+      public static final double kI = 0;
+      public static final double kD = 0;
+    }
+    public static class TiltPID {
+      public static final double maxSpeed = .34;
+      public static final double kP = 2.5;
+      public static final double kI = 0;
+      public static final double kD = .95;
+    }
+  }
+
+  public static class IntakeConstants {
+    public static final int motor_id = 15;
+
+    public static class CubeMode{
+      public static final double fast_outtake_speed = -0.53;
+      public static final double slow_outtake_speed = -0.25;
+      public static final double intake_speed = 0.25;
+    }
+
+    public static class ConeMode{
+      public final static double fast_outtake_speed = -0.53;
+      public final static double slow_outtake_speed = -0.25;
+      public final static double intake_speed = 0.75;
+    }
+  }
+  public static class ArmConstants {
+
+    //TODO: Figure out all of these values
+    public static final int motor_id = 32;
+
+    public static final double fast_speed = 0.4;
+    public static final double slow_speed = 0.2;
+  }
+
+  public static class LEDConstants {
+    public static final int ledControllerID = 9;
+
+    public static final double cubeColour = 0.91;
+
+    public static final double coneColor = 0.67;
   }
 }
