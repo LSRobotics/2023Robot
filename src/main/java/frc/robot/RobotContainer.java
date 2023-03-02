@@ -16,8 +16,14 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.VisionSubsystem;
 
+import java.util.HashMap;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -50,6 +56,11 @@ public class RobotContainer {
 
   private boolean cubeMode = false;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  private String m_autoSelected;
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private HashMap<String, CommandBase> AutonList = new HashMap<String, CommandBase>();
+
+
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
@@ -67,7 +78,9 @@ public class RobotContainer {
       drivetrain_command
     );
 
+    autonListInit();
 
+    dashboardInit();
   }
 
   /**
@@ -131,6 +144,30 @@ public class RobotContainer {
     }));
   }
 
+  //PUT ALL AUTONS IN THIS AND IT WILL JUST WORK
+  public void autonListInit() {
+    //TODO: Please fix these autons
+    //Add any subsequent autons here:
+    AutonList.put("Auton with Balance", Autos.placeAndBalanceAuto(m_DriveTrain, m_IntakeSubsystem, m_ArmSubsystem));
+
+
+
+    //This is the default auto
+    //PLEASE DO NOT ADD ANOTHER AUTON AFTER THIS
+    AutonList.put("Auton without Balance", Autos.placeAndExitAuton(m_DriveTrain, m_IntakeSubsystem, m_ArmSubsystem));
+  }
+
+  public void dashboardInit() {
+    //Initialize what autonomous mode on the dashboard corresponds to which auton
+    SmartDashboard.putData(CommandScheduler.getInstance()); //Displays scheduler status
+
+    //Iterates over all keys in the Auton List and puts them on the smart dashboard
+    for( String key : AutonList.keySet()){
+      //Need to use setDefaultOption instead of addOption so that the last option is used as the default
+      m_chooser.setDefaultOption(key, key);
+    }
+    SmartDashboard.putData("Auto choices", m_chooser);
+  }
 
     
   /**
@@ -140,6 +177,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.testAuto(m_DriveTrain);
+    return AutonList.get(m_chooser.getSelected());
   }
 }

@@ -34,7 +34,7 @@ public final class Constants {
     public  static final double encoderValueToInches = (2 * Math.PI * wheelDiameter / encoderCountsPerRevolution)/gearRatio;
 
     public static class DrivePID {
-      public static final double maxSpeed = .4;
+      public static final double maxSpeed = .6;
       public static final double kP = .05;
       public static final double kI = 0;
       public static final double kD = .001;
@@ -47,10 +47,10 @@ public final class Constants {
       public static final double kD = 0;
     }
     public static class TiltPID {
-      public static final double maxSpeed = .4;
-      public static final double kP = 1.7;
+      public static final double maxSpeed = .34;
+      public static final double kP = 2.5;
       public static final double kI = 0;
-      public static final double kD = .8;
+      public static final double kD = .95;
     }
   }
 
@@ -73,6 +73,9 @@ public final class Constants {
 
     //TODO: Figure out all of these values
     public static final int motor_id = 32;
+
+    public static final double fast_speed = 0.4;
+    public static final double slow_speed = 0.2;
   }
 
   public static class LEDConstants {

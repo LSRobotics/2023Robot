@@ -35,6 +35,8 @@ public class DriveTrain extends SubsystemBase {
   private MotorControllerGroup right_motors = new MotorControllerGroup(fr_motor, br_motor);
 
   private DifferentialDrive drive_controller = new DifferentialDrive(right_motors, left_motors);
+  private double driveSpeed = 0;
+  private double turnSpeed = 0;
   
   //please check navx port
   private AHRS navx = new AHRS(SerialPort.Port.kMXP);
@@ -48,8 +50,16 @@ public class DriveTrain extends SubsystemBase {
     // set the controller to understand continuous angle input
   }
 
+  @Override
+  public void periodic() {
+      // TODO Auto-generated method stub
+      super.periodic();
+      drive_controller.arcadeDrive(driveSpeed, turnSpeed);
+  }
+
   public void arcadeDrive(double speed, double rotation) {
-    drive_controller.arcadeDrive(speed, rotation);
+    driveSpeed = speed;
+    turnSpeed = rotation;
   }
 
   public double getEncoderValue() {
