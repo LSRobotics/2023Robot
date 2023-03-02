@@ -23,7 +23,7 @@ public class AutoBalance extends PIDCommand {
       driveTrain
       );
       this.driveTrain = driveTrain;
-      getController().setTolerance(5,7.5);
+      getController().setTolerance(5,4);
     }
 
     @Override

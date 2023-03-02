@@ -8,14 +8,22 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SelectCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.AutoBalance;
 
 public final class Autos {
+
   /** Example static factory for an autonomous command. */
   public static CommandBase exampleAuto(ExampleSubsystem subsystem) {
     return Commands.sequence(subsystem.exampleMethodCommand(), new ExampleCommand(subsystem));
@@ -28,12 +36,43 @@ public final class Autos {
     );
   }
 
-  public final static CommandBase placeAndBalanceAuto(DriveTrain driveTrain, IntakeSubsystem intakeSubsystem) {
+  public final static CommandBase placeAndBalanceAuto(DriveTrain driveTrain, IntakeSubsystem intakeSubsystem, ArmSubsystem armSubsystem) {
     return Commands.sequence(
       Commands.race(
-        Commands.startEnd(() -> {intakeSubsystem.setPower(IntakeConstants.ConeMode.fast_outtake_speed);}, () -> {intakeSubsystem.setPower(0);}, intakeSubsystem),
+        Commands.startEnd(() -> {armSubsystem.setArmSpeed(ArmConstants.fast_speed);}, () -> {armSubsystem.setArmSpeed(0);}),
+        new WaitCommand(1.5)
+      ),
+      new WaitCommand(0.5),
+      Commands.race(
+        Commands.startEnd(() -> {intakeSubsystem.setPower(-0.7);}, () -> {intakeSubsystem.setPower(0);}, intakeSubsystem),
         new WaitCommand(0.5)
-      )
+      ),
+      //Move and retract arm
+      Commands.parallel(
+        new moveUntilAngled(driveTrain, -1),
+        Commands.race(
+          Commands.startEnd(() -> {armSubsystem.setArmSpeed(-ArmConstants.fast_speed);}, () -> {armSubsystem.setArmSpeed(0);}),
+          new WaitCommand(2)
+        )
+      ),
+      new AutoBalance(driveTrain),
+      new PrintCommand("finished"),
+      new StayStill(driveTrain)
+    );
+  }
+
+  public final static CommandBase placeAndExitAuton(DriveTrain driveTrain, IntakeSubsystem intakeSubsystem, ArmSubsystem armSubsystem) {
+    return Commands.sequence(
+      Commands.race(
+        Commands.startEnd(() -> {armSubsystem.setArmSpeed(ArmConstants.fast_speed);}, () -> {armSubsystem.setArmSpeed(0);}),
+        new WaitCommand(1.5)
+      ),
+      new WaitCommand(0.5),
+      Commands.race(
+        Commands.startEnd(() -> {intakeSubsystem.setPower(-0.7);}, () -> {intakeSubsystem.setPower(0);}, intakeSubsystem),
+        new WaitCommand(0.5)
+      ),
+      new pidDrive(-132, driveTrain)
     );
   }
 
