@@ -45,8 +45,8 @@ public class RobotContainer {
 
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
  
-  private SlewRateLimiter filter = new SlewRateLimiter(2.8);
-  private SlewRateLimiter filter2 = new SlewRateLimiter(2.8);
+  private SlewRateLimiter filter = new SlewRateLimiter(3);
+  private SlewRateLimiter filter2 = new SlewRateLimiter(3);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
