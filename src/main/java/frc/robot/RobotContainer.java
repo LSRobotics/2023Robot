@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.StayStill;
 import frc.robot.commands.VisionAlign;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -36,12 +37,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  private boolean cubeMode = false;
+
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DriveTrain m_DriveTrain = new DriveTrain();
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
   private final ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
-  private final LEDSubsystem m_LedSubsystem = new LEDSubsystem();
+  private final LEDSubsystem m_LedSubsystem = new LEDSubsystem(cubeMode);
 
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
  
@@ -54,7 +57,6 @@ public class RobotContainer {
   private final CommandXboxController m_operatorController = 
       new CommandXboxController(1);
 
-  private boolean cubeMode = false;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
@@ -94,10 +96,13 @@ public class RobotContainer {
    */
   private void configureBindings() {
     
+    //Driver Controls
     m_driverController.a().toggleOnTrue(new AutoBalance(m_DriveTrain));
     m_driverController.x()
       .toggleOnTrue(new VisionAlign(m_DriveTrain, m_VisionSubsystem));
+    m_driverController.b().toggleOnTrue(new StayStill(m_DriveTrain, m_LedSubsystem));
 
+    //Operator Controls
     m_operatorController.rightTrigger().onTrue(Commands.runOnce(() -> 
         m_IntakeSubsystem.setPower(cubeMode ? Constants.IntakeConstants.CubeMode.intake_speed : Constants.IntakeConstants.ConeMode.intake_speed)
       )
@@ -148,7 +153,7 @@ public class RobotContainer {
   public void autonListInit() {
     //TODO: Please fix these autons
     //Add any subsequent autons here:
-    AutonList.put("Auton with Balance", Autos.placeAndBalanceAuto(m_DriveTrain, m_IntakeSubsystem, m_ArmSubsystem));
+    AutonList.put("Auton with Balance", Autos.placeAndBalanceAuto(m_DriveTrain, m_IntakeSubsystem, m_ArmSubsystem, m_LedSubsystem));
 
 
 

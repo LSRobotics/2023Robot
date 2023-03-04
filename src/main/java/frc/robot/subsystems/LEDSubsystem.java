@@ -6,17 +6,40 @@ import frc.robot.Constants;
 
 public class LEDSubsystem extends SubsystemBase{
     private Spark LED = new Spark(Constants.LEDConstants.ledControllerID);
-    
-    public LEDSubsystem(){
+    private boolean internalCubeMode;
+    private boolean inBrake = false;
+
+    public LEDSubsystem(boolean initialColor){
         super();
+        this.internalCubeMode = initialColor;
     }
 
     public void setMode(boolean cubeMode){
-        if(cubeMode){
+        internalCubeMode = cubeMode;
+        updateColor();
+    }
+    
+    public void updateColor() {
+        if (inBrake) {
+            LED.set(Constants.LEDConstants.brakeColor);
+            return;
+        }
+
+        if(internalCubeMode){
             LED.set(Constants.LEDConstants.cubeColour);
         } else {
             LED.set(Constants.LEDConstants.coneColor);  
         }
+    }
+
+    public void setBrakeMode() {
+        inBrake = true;
+        updateColor();
+    }
+
+    public void disableBrakeMode() {
+        inBrake = false;
+        updateColor();
     }
 
 }
