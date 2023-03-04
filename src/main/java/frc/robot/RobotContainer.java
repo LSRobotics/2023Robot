@@ -62,7 +62,6 @@ public class RobotContainer {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private HashMap<String, CommandBase> AutonList = new HashMap<String, CommandBase>();
 
-
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
@@ -172,6 +171,7 @@ public class RobotContainer {
       m_chooser.setDefaultOption(key, key);
     }
     SmartDashboard.putData("Auto choices", m_chooser);
+
   }
 
     

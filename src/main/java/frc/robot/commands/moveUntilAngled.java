@@ -5,8 +5,8 @@ import frc.robot.subsystems.DriveTrain;
 
 public class moveUntilAngled extends CommandBase {
 
-    private static final double speed = 0.4;
-    private static final double angleThreshold = 4;
+    private static final double speed = 0.42;
+    private static final double angleThreshold = 13;
 
     private int direction; 
     private double startingAngle;
@@ -27,7 +27,7 @@ public class moveUntilAngled extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return (driveTrain.getTiltAngle() - startingAngle) > angleThreshold;
+        return Math.abs((driveTrain.getTiltAngle() - startingAngle)) > angleThreshold;
     }
 
     @Override

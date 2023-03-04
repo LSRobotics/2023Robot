@@ -12,6 +12,7 @@ public class LEDSubsystem extends SubsystemBase{
     public LEDSubsystem(boolean initialColor){
         super();
         this.internalCubeMode = initialColor;
+        updateColor();
     }
 
     public void setMode(boolean cubeMode){
