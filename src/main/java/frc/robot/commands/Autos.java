@@ -8,6 +8,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +37,7 @@ public final class Autos {
     );
   }
 
-  public final static CommandBase placeAndBalanceAuto(DriveTrain driveTrain, IntakeSubsystem intakeSubsystem, ArmSubsystem armSubsystem) {
+  public final static CommandBase placeAndBalanceAuto(DriveTrain driveTrain, IntakeSubsystem intakeSubsystem, ArmSubsystem armSubsystem, LEDSubsystem ledSubsystem) {
     return Commands.sequence(
       Commands.race(
         Commands.startEnd(() -> {armSubsystem.setArmSpeed(ArmConstants.fast_speed);}, () -> {armSubsystem.setArmSpeed(0);}),
@@ -57,7 +58,7 @@ public final class Autos {
       ),
       new AutoBalance(driveTrain),
       new PrintCommand("finished"),
-      new StayStill(driveTrain)
+      new StayStill(driveTrain, ledSubsystem)
     );
   }
 

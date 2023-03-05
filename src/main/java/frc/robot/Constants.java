@@ -47,10 +47,10 @@ public final class Constants {
       public static final double kD = 0;
     }
     public static class TiltPID {
-      public static final double maxSpeed = .34;
-      public static final double kP = 2.5;
+      public static final double maxSpeed = .35;
+      public static final double kP = 0.133;
       public static final double kI = 0;
-      public static final double kD = .95;
+      public static final double kD = 0.05;
     }
   }
 
@@ -84,5 +84,6 @@ public final class Constants {
     public static final double cubeColour = 0.91;
 
     public static final double coneColor = 0.67;
+    public static final double brakeColor = 0.61;
   }
 }

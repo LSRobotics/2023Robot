@@ -2,14 +2,17 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.LEDSubsystem;
 
 public class StayStill extends CommandBase {
     DriveTrain driveTrain;
-    public StayStill(DriveTrain driveTrain) {
+    LEDSubsystem ledSubsystem;
+    public StayStill(DriveTrain driveTrain, LEDSubsystem ledSubsystem) {
         super();
         addRequirements(driveTrain);
 
         this.driveTrain = driveTrain;
+        this.ledSubsystem = ledSubsystem;
     }
 
     @Override
@@ -17,6 +20,7 @@ public class StayStill extends CommandBase {
         // TODO Auto-generated method stub
         super.initialize();
         driveTrain.setBrake();
+        ledSubsystem.setBrakeMode();
     }
 
     @Override
@@ -30,6 +34,7 @@ public class StayStill extends CommandBase {
     public void end(boolean interrupted) {
         // TODO Auto-generated method stub
         super.end(interrupted);
+        ledSubsystem.disableBrakeMode();
         driveTrain.setCoast();
     }
 }
