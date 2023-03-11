@@ -6,7 +6,7 @@ import frc.robot.subsystems.DriveTrain;
 public class moveUntilAngled extends CommandBase {
 
     private static final double speed = 0.42;
-    private static final double angleThreshold = 14;
+    private static final double angleThreshold = 17;
 
     private int direction; 
     private double startingAngle;

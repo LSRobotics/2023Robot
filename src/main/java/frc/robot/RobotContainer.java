@@ -70,7 +70,7 @@ public class RobotContainer {
       () -> {
         return filter.calculate((m_driverController.getRightTriggerAxis() - m_driverController.getLeftTriggerAxis()));
       },
-      () -> {return filter2.calculate(.6*m_driverController.getLeftX());}
+      () -> {return filter2.calculate(.7*m_driverController.getLeftX());}
     ); //technically the second argument can just be passed directly as a lambda (m_dirverController::getRightX), but it is kept as an inline lambda for symmetry
     drivetrain_command.addRequirements(m_DriveTrain);
     //Set the DriveTrain subsystem to automatically call the drive function by default
