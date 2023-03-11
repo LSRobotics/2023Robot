@@ -38,7 +38,6 @@ public class DriveTrain extends SubsystemBase {
   private double driveSpeed = 0;
   private double turnSpeed = 0;
   
-  private boolean 
 
   //please check navx port
   private AHRS navx = new AHRS(SerialPort.Port.kMXP);
@@ -122,10 +121,6 @@ public class DriveTrain extends SubsystemBase {
       arcadeDrive(driveSpeed.getAsDouble(), turnSpeed.getAsDouble());
     }
 
-    @Override
-    public void slowDriveSpeed(){
-      poo = .6;
-    }
     // Called once after isFinished returns true
     @Override
     public void end(boolean interrupted) {

@@ -16,6 +16,7 @@ import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.DriveTrain.ArcadeDriveCommand;
 
 import java.util.HashMap;
 
@@ -38,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   private boolean cubeMode = false;
+  private boolean slowMode = false;
 
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
@@ -100,8 +102,7 @@ public class RobotContainer {
     m_driverController.x()
       .toggleOnTrue(new VisionAlign(m_DriveTrain, m_VisionSubsystem));
     m_driverController.b().toggleOnTrue(new StayStill(m_DriveTrain, m_LedSubsystem));
-
-    m_driverController.y().toggleOnTrue()
+    m_driverController.y().onTrue(Commands.runOnce(() -> {}, () -> {}));
     //Operator Controls
     m_operatorController.rightTrigger().onTrue(Commands.runOnce(() -> 
         m_IntakeSubsystem.setPower(cubeMode ? Constants.IntakeConstants.CubeMode.intake_speed : Constants.IntakeConstants.ConeMode.intake_speed)
