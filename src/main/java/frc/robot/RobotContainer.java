@@ -68,9 +68,9 @@ public class RobotContainer {
 
     final DriveTrain.ArcadeDriveCommand drivetrain_command = m_DriveTrain.new ArcadeDriveCommand(
       () -> {
-        return filter.calculate(.7*(m_driverController.getRightTriggerAxis() - m_driverController.getLeftTriggerAxis()));
+        return filter.calculate((m_driverController.getRightTriggerAxis() - m_driverController.getLeftTriggerAxis()));
       },
-      () -> {return filter2.calculate(.5*m_driverController.getLeftX());}
+      () -> {return filter2.calculate(.6*m_driverController.getLeftX());}
     ); //technically the second argument can just be passed directly as a lambda (m_dirverController::getRightX), but it is kept as an inline lambda for symmetry
     drivetrain_command.addRequirements(m_DriveTrain);
     //Set the DriveTrain subsystem to automatically call the drive function by default
@@ -101,6 +101,7 @@ public class RobotContainer {
       .toggleOnTrue(new VisionAlign(m_DriveTrain, m_VisionSubsystem));
     m_driverController.b().toggleOnTrue(new StayStill(m_DriveTrain, m_LedSubsystem));
 
+    m_driverController.y().toggleOnTrue()
     //Operator Controls
     m_operatorController.rightTrigger().onTrue(Commands.runOnce(() -> 
         m_IntakeSubsystem.setPower(cubeMode ? Constants.IntakeConstants.CubeMode.intake_speed : Constants.IntakeConstants.ConeMode.intake_speed)
