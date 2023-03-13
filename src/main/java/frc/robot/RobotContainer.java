@@ -153,7 +153,7 @@ public class RobotContainer {
     //TODO: Please fix these autons
     //Add any subsequent autons here:
     AutonList.put("Auton with Balance", Autos.placeAndBalanceAuto(m_DriveTrain, m_IntakeSubsystem, m_ArmSubsystem, m_LedSubsystem));
-
+    AutonList.put("Auton with Move and then Balance", Autos.testLeavePlaceAndBalanceAuto(m_DriveTrain, m_IntakeSubsystem, m_ArmSubsystem, m_LedSubsystem));
 
 
     //This is the default auto

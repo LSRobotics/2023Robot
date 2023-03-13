@@ -6,10 +6,10 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 
-public class pidDrive extends PIDCommand {
+public class pidDriveFrontEncoders extends PIDCommand {
     private DriveTrain driveTrain;
 
-    public pidDrive(double inches, DriveTrain driveTrain) {
+    public pidDriveFrontEncoders(double inches, DriveTrain driveTrain) {
         super(new PIDController(DriveTrainConstants.DrivePID.kP, DriveTrainConstants.DrivePID.kI,
         DriveTrainConstants.DrivePID.kD), 
         driveTrain::getEncoderValue,
@@ -21,7 +21,7 @@ public class pidDrive extends PIDCommand {
         driveTrain);
         this.driveTrain = driveTrain;
         driveTrain.setBrake();
-        getController().setTolerance(3, .3);
+        getController().setTolerance(1, .3);
     }
 
     @Override

@@ -47,10 +47,10 @@ public final class Constants {
       public static final double kD = 0;
     }
     public static class TiltPID {
-      public static final double maxSpeed = .35;
-      public static final double kP = 0.133;
+      public static final double maxSpeed = .4;
+      public static final double kP = 0.1;
       public static final double kI = 0;
-      public static final double kD = 0.05;
+      public static final double kD = 0.012;
     }
   }
 
