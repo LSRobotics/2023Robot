@@ -70,7 +70,7 @@ public class RobotContainer {
 
     final DriveTrain.ArcadeDriveCommand drivetrain_command = m_DriveTrain.new ArcadeDriveCommand(
       () -> {
-        return filter.calculate((m_driverController.getRightTriggerAxis() - m_driverController.getLeftTriggerAxis()));
+        return filter.calculate((slowMode ? .7 : 1) * (m_driverController.getRightTriggerAxis() - m_driverController.getLeftTriggerAxis()));
       },
       () -> {return filter2.calculate(.7*m_driverController.getLeftX());}
     ); //technically the second argument can just be passed directly as a lambda (m_dirverController::getRightX), but it is kept as an inline lambda for symmetry
@@ -102,7 +102,10 @@ public class RobotContainer {
     m_driverController.x()
       .toggleOnTrue(new VisionAlign(m_DriveTrain, m_VisionSubsystem));
     m_driverController.b().toggleOnTrue(new StayStill(m_DriveTrain, m_LedSubsystem));
-    m_driverController.y().onTrue(Commands.runOnce(() -> {}, () -> {}));
+    m_driverController.y().onTrue(Commands.runOnce(() -> 
+    {
+      slowMode = !slowMode;
+    }));
     //Operator Controls
     m_operatorController.rightTrigger().onTrue(Commands.runOnce(() -> 
         m_IntakeSubsystem.setPower(cubeMode ? Constants.IntakeConstants.CubeMode.intake_speed : Constants.IntakeConstants.ConeMode.intake_speed)
