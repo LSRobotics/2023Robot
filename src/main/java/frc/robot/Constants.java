@@ -64,7 +64,7 @@ public final class Constants {
     }
 
     public static class ConeMode{
-      public final static double fast_outtake_speed = -0.53;
+      public final static double fast_outtake_speed = -1;
       public final static double slow_outtake_speed = -0.25;
       public final static double intake_speed = 0.75;
     }
