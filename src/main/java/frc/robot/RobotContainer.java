@@ -157,7 +157,7 @@ public class RobotContainer {
     //Add any subsequent autons here:
     AutonList.put("Auton with Balance", Autos.placeAndBalanceAuto(m_DriveTrain, m_IntakeSubsystem, m_ArmSubsystem, m_LedSubsystem));
     AutonList.put("Auton with Move and then Balance", Autos.testLeavePlaceAndBalanceAuto(m_DriveTrain, m_IntakeSubsystem, m_ArmSubsystem, m_LedSubsystem));
-
+    AutonList.put("Auton just Cone Test", Autos.placeCone(m_IntakeSubsystem, m_ArmSubsystem));
 
     //This is the default auto
     //PLEASE DO NOT ADD ANOTHER AUTON AFTER THIS

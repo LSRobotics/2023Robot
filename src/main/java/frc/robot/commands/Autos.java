@@ -62,6 +62,24 @@ public final class Autos {
     );
   }
 
+
+  public final static CommandBase placeCone(IntakeSubsystem intakeSubsystem, ArmSubsystem armSubsystem) {
+    return Commands.sequence(
+      Commands.race(
+        Commands.startEnd(() -> {armSubsystem.setArmSpeed(ArmConstants.fast_speed);}, () -> {armSubsystem.setArmSpeed(0);}),
+        new WaitCommand(1.5)
+      ),
+      new WaitCommand(0.5),
+      Commands.race(
+        Commands.startEnd(() -> {intakeSubsystem.setPower(-1);}, () -> {intakeSubsystem.setPower(0);}, intakeSubsystem),
+        new WaitCommand(0.5)
+      )
+      
+    );
+      
+    
+  }
+
   public final static CommandBase placeAndExitAuton(DriveTrain driveTrain, IntakeSubsystem intakeSubsystem, ArmSubsystem armSubsystem) {
     return Commands.sequence(
       Commands.race(
@@ -73,7 +91,7 @@ public final class Autos {
         Commands.startEnd(() -> {intakeSubsystem.setPower(-0.7);}, () -> {intakeSubsystem.setPower(0);}, intakeSubsystem),
         new WaitCommand(0.5)
       ),
-      new pidDrive(-132, driveTrain)
+      new pidDrive(-180, driveTrain)
     );
   }
 
